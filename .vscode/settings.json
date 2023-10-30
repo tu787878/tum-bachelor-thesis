@@ -1,0 +1,16 @@
+{
+    "grammarly.files.include": [
+        "**/README.md",
+        "*.tex",
+        "**/readme.md",
+        "**/CONTRIBUTING.md",
+        "chapter/*.md"
+    ],
+    "grammarly.selectors": [
+        {
+            "language": "latex",
+            "scheme": "file",
+            "pattern": "chapters/01_introduction.tex"
+        }
+    ]
+}
