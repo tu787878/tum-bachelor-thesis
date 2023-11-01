@@ -1,0 +1,37 @@
+\chapter{Preliminaries}\label{chapter:preliminaries}
+% basic
+In this section, we introduce some basic notions that we use throughout this thesis.
+\subsection*{Finite automata}
+\paragraph*{}
+We use standard notions of finite automata. We distinguish between deterministic and 
+non-deterministic automata to recognize regular languages of finite words.
+
+\begin{definition}\label{definition:dfa}
+    Deterministic finite automaton (DFA).
+\end{definition}
+\textit{
+    A DFA is a quintuple $\mathcal{M} = (Q, q_0, \delta, \Sigma, F)$ where $Q$ is a finite set of states with 
+    a initial state $q_0 \in Q$. A set of input symbols called the alphabet $\Sigma$.
+    A transition $\delta: Q \times \Sigma \rightarrow  Q$ and a set of final states $F$.
+    Let $w=a_1a_2...a_n$ be a string over the alphabet $\Sigma$. The automaton $\mathcal{M}$ 
+    accepts $w$ if a sequence of states, $r_0, r_1,...r_n$ exist in $Q$:
+    \begin{itemize}
+        \item $r_0=q_0$
+        \item $r_{i+1} = \delta(r_i, a_{i+1}),$ for $i = 0,...,n-1$
+        \item $r_n \in F$
+    \end{itemize}
+    }
+\begin{definition}\label{definition:nfa}
+    Nondeterministic finite automaton (NFA).
+\end{definition}
+\textit{
+    A NFA is a quintuple $\mathcal{N} = (Q, q_0, \Delta, \Sigma, F)$ where $Q$, $\Sigma$ and $F$ 
+    are as for a DFA.
+    Let $w=a_1a_2...a_n$ be a string over the alphabet $\Sigma$. The automaton $\mathcal{N}$ 
+    accepts $w$ if a sequence of states, $r_0, r_1,...r_n$ exist in $Q$:
+    \begin{itemize}
+        \item $r_0=q_0$
+        \item $r_{i+1} \in \Delta(r_i, a_{i+1}),$ for $i = 0,...,n-1$
+        \item $r_n \in F$
+    \end{itemize}
+}

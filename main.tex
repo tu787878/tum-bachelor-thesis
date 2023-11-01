@@ -23,6 +23,21 @@
 \newcommand*{\getSubmissionDate}{Submission date}
 \newcommand*{\getSubmissionLocation}{Munich}
 
+\newtheoremstyle{colon}%
+{}
+{}
+{\itshape}%bodyfont
+{}%indent
+{\bfseries}%headfont
+{:}%head punctuation
+{ }%space after head
+{}
+\theoremstyle{colon}
+\newtheorem{definition}{Definition}[chapter]
+
+\theoremstyle{colon}
+\newtheorem{example}{Example}[chapter]
+
 \begin{document}
 
 % Set page numbering to avoid "destination with the same identifier has been already used" warning for cover page.
@@ -43,9 +58,9 @@
 \mainmatter{}
 
 \input{chapters/01_introduction}
-\input{chapters/02_literature_review}
-\input{chapters/03_inductive_statement}
-\input{chapters/04_learning_algorithms}
+\input{chapters/02_preliminaries.tex}
+\input{chapters/03_inductive_statement.tex}
+\input{chapters/04_learning_algorithms.tex}
 \input{chapters/05_implementation_and_experiments}
 \input{chapters/06_conclusion}
 
@@ -59,7 +74,6 @@
 	\acro{TUM}[TUM]{Technical University of Munich}
 	% TODO: add acronyms
 \end{acronym}
-
 \listoffigures{}
 \listoftables{}
 \microtypesetup{protrusion=true}

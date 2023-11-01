@@ -1,1 +1,40 @@
-\chapter{Learning Algorithms}\label{chapter:learning_algorithm}
+\chapter{Algorithmic Learning of Finite Automata}\label{chapter:learning_algorithm}
+Learning automata is a computational model for solving problems, where an agent learns 
+to optimize its behavior by interacting with an unknown environment. 
+The agent, also known as a learner, 
+observes the feedback from the teacher, updates its internal state, and adjusts its 
+actions accordingly. The teacher 
+This interaction process between the learner and the teacher 
+is the primary mechanism of learning automata.
+In the field of automata learning, there are generally two distinct settings: 
+active and passive learning. However, in this thesis, we only focus on the active learning.
+We do not introduce passive learning here but refer the interested reader to \cite*{clarke2009model}.
+
+\paragraph*{}
+This chapter aims to provide a deeper understanding of the process of learning automata, 
+including the roles and responsibilities of the teacher and learner.
+\section{The Teacher and Learner}\label{section:teacher_learning}
+In this learning scenario, the teacher is proficient in the language being taught 
+and is responsible for answering any questions posed by the learner. The learner 
+is given the opportunity to ask two types of queries - membership and equivalence. 
+Membership queries are used to classify a word based on whether it belongs to the 
+language being taught or not. Equivalence queries, on the other hand, are used to 
+determine whether an assumed automaton is equivalent to the language the teacher has 
+in mind. The learning process continues until the teacher answers an equivalence query 
+positively.
+\paragraph*{Membership oracle} 
+The learner provides a word $w \in \Sigma^{*}$, the teacher replies "yes" 
+or "no" depending on whether $w \in \mathcal{L}$ or not.
+\paragraph*{Equivalent oracle} 
+The learner conjectures a regular language, typically given as a DFA $\mathcal{M}$, 
+and the teacher checks whether $\mathcal{M}$ is an equivalent description of the target 
+language $\mathcal{L}$, otherwise return an counterexample $u \in \Sigma^{*}$ with 
+$u \in \mathcal{L}(\mathcal{M}) \Longleftrightarrow u \notin (\mathcal{L})$.
+\section{Algorithms}\label{section:learner_learning}
+A learning algorithm—often called learner—learns a regular target 
+language $\mathcal{L} \subset \Sigma^{*}$ over an a priori fixed alphabet $\Sigma$ by actively querying a teacher.
+We apply several of these algorithms in the course of this thesis.
+\subsection{L*}
+\subsection{NL*}
+\subsection{Kearns-Vazirani}
+\subsection{Rivest-Schapire}

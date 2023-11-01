@@ -1,1 +1,14 @@
 \chapter{Implementation}\label{chapter:implementation}
+
+We apply automata learning algorithms to solve the regular model checking problems
+as well as finding an inductive statements for regular transition system.
+
+\paragraph*{Membership query}
+On a membership oracle, the learner provides a statement and asks the teacher if 
+this statement whether inductive or not. As we described in \autoref{chapter:inductive_statement}, 
+a statement $I$ is \textit{inductive} if, for any transition $v \rightsquigarrow u$
+where $u$ satisfies $I$, $u$ also satisfies the statement.
+REF TO ABOVE DEFINITION.
+Therefore, one can simply implement the Membership Oracle by checking the acceptance 
+of $\mathcal{M}$ while $\mathcal{M}$ is an automaton for 
+$\overline{Inductive_{\mathcal{V}}(\mathcal{M})}$ and negating the answer.
