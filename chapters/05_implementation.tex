@@ -1,0 +1,67 @@
+\chapter{Implementation}\label{chapter:implementation}
+
+We apply automata learning algorithms to solve the regular model checking problems
+as well as finding an inductive statements for regular transition system.
+
+\paragraph*{Membership query}
+On a membership oracle, the learner provides a statement and asks the teacher if 
+this statement whether inductive or not. As we described in \autoref{chapter:inductive_statements}, 
+a statement $I$ is \textit{inductive} if, for any transition $v \rightsquigarrow u$
+where $u$ satisfies $I$, $u$ also satisfies the statement.
+REF TO ABOVE DEFINITION.
+Therefore, one can simply implement the Membership Oracle by checking the acceptance 
+of $\mathcal{M}$ while $\mathcal{M}$ is an automaton for 
+$\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$ and negating the answer.
+The $\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$ is defined by:
+\[ \overline{Inductive_{\mathcal{V}}(\mathcal{R})} = \lbrace I \in \Gamma^* \, | \, \exists u
+\rightsquigarrow_\mathcal{T} w \, . \, u \models \, I \, and \, w \, \not\models I\rbrace
+\]
+
+Let $\mathcal{T} =  \langle P, \Sigma \times \Sigma, \Delta, p_0, E \rangle$ 
+is a transducer and  $\mathcal{V} =  \langle P, \Sigma \times \Gamma, \delta, q_0, F \rangle$ is 
+an interpretation. The automaton of $\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$ 
+is defined by $\langle Q \times P \times Q, \Gamma, \triangle, \langle q_o,  p_0, q_o \rangle, 
+E \times F \times (Q \setminus F) \rangle$ where
+
+\[
+    \triangle(\langle q_1, p, q_2 \rangle, I) = \delta()
+\]
+
+
+\begin{algorithm}
+\caption{Membership query}\label{alg:membership}
+\textbf{Input: } \textit{Statement} $\mathcal{I}$ 
+
+\textbf{Output: } \textit{True} or \textit{False}
+
+begin
+\begin{algorithmic}
+    \State $\mathcal{M} \gets getAutomaton(\overline{Inductive_{\mathcal{V}}(\mathcal{R})})$
+    \If{$\mathcal{I} \in \mathcal{L}(\mathcal{M}) $}
+        \State return \textit{false};
+    \Else
+        \State return \textit{true};
+    \EndIf
+\end{algorithmic}
+end
+\end{algorithm}
+
+\begin{algorithm}
+    \caption{Equivalent query}\label{alg:cap}
+    \begin{algorithmic}
+    \Require $n \geq 0$
+    \Ensure $y = x^n$
+    \State $y \gets 1$
+    \State $X \gets x$
+    \State $N \gets n$
+    \While{$N \neq 0$}
+    \If{$N$ is even}
+        \State $X \gets X \times X$
+        \State $N \gets \frac{N}{2}$  \Comment{This is a comment}
+    \ElsIf{$N$ is odd}
+        \State $y \gets y \times X$
+        \State $N \gets N - 1$
+    \EndIf
+    \EndWhile
+    \end{algorithmic}
+    \end{algorithm}

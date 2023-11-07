@@ -11,6 +11,11 @@
             "language": "latex",
             "scheme": "file",
             "pattern": "chapters/01_introduction.tex"
+        },
+        {
+            "language": "latex",
+            "scheme": "file",
+            "pattern": "chapters/03_learning_algorithms.tex"
         }
     ]
 }

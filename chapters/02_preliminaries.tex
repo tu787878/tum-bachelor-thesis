@@ -10,7 +10,7 @@ non-deterministic automata to recognize regular languages of finite words.
     Deterministic finite automaton (DFA).
 \end{definition}
 \textit{
-    A DFA is a quintuple $\mathcal{M} = (Q, q_0, \delta, \Sigma, F)$ where $Q$ is a finite set of states with 
+    A DFA is a quintuple $\mathcal{M} = (Q, q_0, \Sigma, \delta, F)$ where $Q$ is a finite set of states with 
     a initial state $q_0 \in Q$. A set of input symbols called the alphabet $\Sigma$.
     A transition $\delta: Q \times \Sigma \rightarrow  Q$ and a set of final states $F$.
     Let $w=a_1a_2...a_n$ be a string over the alphabet $\Sigma$. The automaton $\mathcal{M}$ 
@@ -25,7 +25,7 @@ non-deterministic automata to recognize regular languages of finite words.
     Nondeterministic finite automaton (NFA).
 \end{definition}
 \textit{
-    A NFA is a quintuple $\mathcal{N} = (Q, q_0, \Delta, \Sigma, F)$ where $Q$, $\Sigma$ and $F$ 
+    A NFA is a quintuple $\mathcal{N} = (Q, q_0, \Sigma, \Delta, F)$ where $Q$, $\Sigma$ and $F$ 
     are as for a DFA.
     Let $w=a_1a_2...a_n$ be a string over the alphabet $\Sigma$. The automaton $\mathcal{N}$ 
     accepts $w$ if a sequence of states, $r_0, r_1,...r_n$ exist in $Q$:

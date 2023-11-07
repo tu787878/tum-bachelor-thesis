@@ -3,38 +3,61 @@ Learning automata is a computational model for solving problems, where an agent 
 to optimize its behavior by interacting with an unknown environment. 
 The agent, also known as a learner, 
 observes the feedback from the teacher, updates its internal state, and adjusts its 
-actions accordingly. The teacher 
-This interaction process between the learner and the teacher 
+actions accordingly. The $\textit{Teacher}$ 
+This interaction process between the $\textit{Learner}$ and the $\textit{Teacher}$ 
 is the primary mechanism of learning automata.
 In the field of automata learning, there are generally two distinct settings: 
-active and passive learning. However, in this thesis, we only focus on the active learning.
+active and passive learning. Passive algorithms are provided with a fixed set of 
+examples consisting of strings that the automaton should either accept or reject. 
+Active algorithms, unlike passive ones, have the ability to expand the set of examples as needed
+by asking further queries.
+However, in this thesis, our focus is solely on active learning.
 We do not introduce passive learning here but refer the interested reader to \cite*{clarke2009model}.
 
-\paragraph*{}
 This chapter aims to provide a deeper understanding of the process of learning automata, 
-including the roles and responsibilities of the teacher and learner.
-\section{The Teacher and Learner}\label{section:teacher_learning}
-In this learning scenario, the teacher is proficient in the language being taught 
-and is responsible for answering any questions posed by the learner. The learner 
+including the roles and responsibilities of the $\textit{Teacher}$ and $\textit{Learner}$ in \autoref{section:teacher_learning}. 
+In \autoref{section:learner_learning}, we will introduce several of active algorithms 
+that use for our experiment.
+\section{The oracles}\label{section:teacher_learning}
+In this learning scenario, the $\textit{Teacher}$ is proficient in the language being taught 
+and is responsible for answering any questions posed by the learner. The $\textit{Learner}$ 
 is given the opportunity to ask two types of queries - membership and equivalence. 
 Membership queries are used to classify a word based on whether it belongs to the 
 language being taught or not. Equivalence queries, on the other hand, are used to 
-determine whether an assumed automaton is equivalent to the language the teacher has 
-in mind. The learning process continues until the teacher answers an equivalence query 
+determine whether an assumed automaton is equivalent to the language the $\textit{Teacher}$ has 
+in mind. The learning process continues until the $\textit{Teacher}$ answers an equivalence query 
 positively.
 \paragraph*{Membership oracle} 
-The learner provides a word $w \in \Sigma^{*}$, the teacher replies "yes" 
+The $\textit{Learner}$ provides a word $w \in \Sigma^{*}$, the $\textit{Teacher}$ replies "yes" 
 or "no" depending on whether $w \in \mathcal{L}$ or not.
 \paragraph*{Equivalent oracle} 
-The learner conjectures a regular language, typically given as a DFA $\mathcal{M}$, 
-and the teacher checks whether $\mathcal{M}$ is an equivalent description of the target 
-language $\mathcal{L}$, otherwise return an counterexample $u \in \Sigma^{*}$ with 
-$u \in \mathcal{L}(\mathcal{M}) \Longleftrightarrow u \notin (\mathcal{L})$.
+The $\textit{Learner}$ conjectures a regular language, typically given as a DFA $\mathcal{M}$, 
+and the $\textit{Teacher}$ checks whether $\mathcal{M}$ is an equivalent description of the target 
+language $\mathcal{L}$ and return "yes", otherwise return an counterexample $u \in \Sigma^{*}$ with 
+$u \in \mathcal{L}(\mathcal{M}) \Longleftrightarrow u \notin \mathcal{L}$ or 
+$u \in \mathcal{L} \Longleftrightarrow u \notin \mathcal{L}(\mathcal{M})$.
+\paragraph*{}
+On equivalent oracle, the $\textit{Teacher}$ can return a positive counterexample or a negative counterexample.
+A positive counterexample is a missing word in the conjecture but present in the target.
+The negative one is defined similarly.
+
+It is crucial for the $\textit{Teacher}$ to have a clear and specific understanding of the 
+correct hypothesis.
+Since we know how to implement the $\textit{Teacher}$ to answer the oracles, it is now simple 
+to apply different of learning algorithms.
 \section{Algorithms}\label{section:learner_learning}
 A learning algorithm—often called learner—learns a regular target 
 language $\mathcal{L} \subset \Sigma^{*}$ over an a priori fixed alphabet $\Sigma$ by actively querying a teacher.
 We apply several of these algorithms in the course of this thesis.
 \subsection{L*}
+L* learning automata was introduced by Angluin in 1987.
 \subsection{NL*}
+In general, a nondeterministic finite automata \textit{NFA} is often preferable to a 
+deterministic finite automata \textit{DFA} due to potentially exponential 
+differences in their sizes (REFERENCE FOR COMPARISON OF NFA AND DFA). As such, 
+learning algorithms for \textit{NFA} are needed.
+In this section, we will introduce another active learning algorithm called the \textit{NL*} algorithm,
+patterned after \textit{L*}. The \textit{NL*} infers a canonical residual finite-state automata, 
+a subclass of nondeterministic finite automata was introduced in the seminar work \cite*{clarke2009model}.
 \subsection{Kearns-Vazirani}
 \subsection{Rivest-Schapire}

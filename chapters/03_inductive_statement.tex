@@ -1,5 +1,62 @@
 \chapter{Inductive statements for regular transition system}\label{chapter:inductive_statement}
 % advance
-\paragraph*{Related Work}
+\section*{Related Work}
 \paragraph*{}
 Inductive statements for regular transition system was introduced by M.Sc. Welzel-Mohr.
+
+\paragraph*{}
+\textit{Model checking} is a potent technique that automatically verifies finite 
+state concurrent systems \cite{clarke2009model}.
+In this thesis, we aim to tackle the model-checking problem for a particular class 
+of \textit{parameterized systems} - those that consist of an arbitrary number of components.
+Consider some systems $\mathcal{S}$ that is parameterized by some value n.
+\section*{Regular transition system}\label{section:rts}
+\textit{Regular transition system} is a commonly used model for representing parameterized systems
+in \textit{regular model checking}.
+It describes all reachable configurations from initial configurations through a transducer.
+\begin{definition}\label{definition:transducer}
+    Transducer.
+\end{definition}
+\textit{
+    A $\Sigma$-$\Gamma$-\textit{transducer} is an \textit{NFA} 
+    $\langle Q, Q_0, \Sigma \times \Gamma, \Delta, F \rangle$,
+    it represents a list of pairs $\langle u_1, v_1 \rangle \dots \langle u_n, v_n \rangle$
+    where $\langle u_1 \dots u_n, v_1 \dots v_n \rangle \in \bigcup_{n \geq 0} \Sigma^{n} \times \Gamma^{n}$
+}
+
+\begin{definition}\label{definition:rts}
+    Regular transition system (RTS).
+\end{definition}
+\textit{
+   An RTS is a triple $\mathcal{R} = \langle \Sigma, \mathcal{I}, \mathcal{T} \rangle$ where $\Sigma$
+   is finite alphabet while $\mathcal{I}$ is an NFA, which represents initial configurations.
+   And $\mathcal{T}$ is a $\Sigma$-$\Sigma$-\textit{transducer}.
+}
+
+
+\section*{Inductive statements}\label{section:inductive_statements}
+
+\begin{definition}\label{definition:interpretation}
+    Interpretation.
+\end{definition}
+\textit{
+   For any RTS $\mathcal{R} = \langle \Sigma, \mathcal{I}, \mathcal{T} \rangle$, we call 
+   a pair $\langle \Gamma, \mathcal{V} \rangle$ an $\Gamma$-\textit{interpretation}
+   where $\Gamma$ is a finite alphabet and $\mathcal{V}$ is a deterministic $\Sigma$-$\Sigma$-\textit{transducer}.
+   In the following, we denote $ u \models I $ to indicate $ \langle u, I \rangle \in [[\mathcal{V}]]$
+}
+
+\begin{definition}\label{definition:inductive_statements}
+    Inductive statements.
+\end{definition}
+\textit{
+   For any given $\Gamma$-\textit{interpretation} for $\mathcal{R} = \langle \Sigma, \mathcal{I}, \mathcal{T} \rangle$, we define
+   \[
+   Inductive_{\mathcal{V}}(\mathcal{R}) = \lbrace I \in \Gamma^* | 
+   \forall u \rightsquigarrow_\mathcal{T} \, . \, if \langle u, I \rangle
+   \in [[\mathcal{V}]] \, then \, \langle v, I \rangle \in [[\mathcal{V}]] \rbrace
+   \]
+   \[=  \lbrace I \in \Gamma^* | 
+   \forall u \rightsquigarrow_\mathcal{T} \, . \, if u \models I
+    \, then \, v \models I \rbrace\]
+}
