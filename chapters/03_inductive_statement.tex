@@ -1,19 +1,14 @@
 \chapter{Inductive statements for regular transition system}\label{chapter:inductive_statement}
-% advance
-\section*{Related Work}
 \paragraph*{}
-Inductive statements for regular transition system was introduced by M.Sc. Welzel-Mohr.
+In the \textit{Regular Model Checking} framework, program configurations are 
+represented as finite words over a pre-determined alphabet $\Sigma$.
+The system comprises a series of starting configurations and the transitions.
 
-\paragraph*{}
-\textit{Model checking} is a potent technique that automatically verifies finite 
-state concurrent systems \cite{clarke2009model}.
-In this thesis, we aim to tackle the model-checking problem for a particular class 
-of \textit{parameterized systems} - those that consist of an arbitrary number of components.
-Consider some systems $\mathcal{S}$ that is parameterized by some value n.
-\section*{Regular transition system}\label{section:rts}
-\textit{Regular transition system} is a commonly used model for representing parameterized systems
-in \textit{regular model checking}.
-It describes all reachable configurations from initial configurations through a transducer.
+In this thesis, we will be focusing on \textit{Regular transition system} (RTS) 
+which uses regular languages to represent the models of the program.
+\section{Regular transition system}\label{section:rts}
+The \textit{transducer} will define the behavior of the system, i.e 
+it describes how the configurations change in the system.
 \begin{definition}\label{definition:transducer}
     Transducer.
 \end{definition}
@@ -21,9 +16,10 @@ It describes all reachable configurations from initial configurations through a 
     A $\Sigma$-$\Gamma$-\textit{transducer} is an \textit{NFA} 
     $\langle Q, Q_0, \Sigma \times \Gamma, \Delta, F \rangle$,
     it represents a list of pairs $\langle u_1, v_1 \rangle \dots \langle u_n, v_n \rangle$
-    where $\langle u_1 \dots u_n, v_1 \dots v_n \rangle \in \bigcup_{n \geq 0} \Sigma^{n} \times \Gamma^{n}$
+    where $\langle u_1 \dots u_n, v_1 \dots v_n \rangle \in \bigcup_{n \geq 0} \Sigma^{n} \times \Gamma^{n}$.
 }
 
+EXAMPLE FOR TRANSDUCER
 \begin{definition}\label{definition:rts}
     Regular transition system (RTS).
 \end{definition}
@@ -33,8 +29,9 @@ It describes all reachable configurations from initial configurations through a 
    And $\mathcal{T}$ is a $\Sigma$-$\Sigma$-\textit{transducer}.
 }
 
+EXAMPLE FOR RTS
 
-\section*{Inductive statements}\label{section:inductive_statements}
+\section{Inductive statements}\label{section:inductive_statements}
 
 \begin{definition}\label{definition:interpretation}
     Interpretation.
@@ -43,7 +40,7 @@ It describes all reachable configurations from initial configurations through a 
    For any RTS $\mathcal{R} = \langle \Sigma, \mathcal{I}, \mathcal{T} \rangle$, we call 
    a pair $\langle \Gamma, \mathcal{V} \rangle$ an $\Gamma$-\textit{interpretation}
    where $\Gamma$ is a finite alphabet and $\mathcal{V}$ is a deterministic $\Sigma$-$\Sigma$-\textit{transducer}.
-   In the following, we denote $ u \models I $ to indicate $ \langle u, I \rangle \in [[\mathcal{V}]]$
+   In the following, we denote $ u \models I $ to indicate $ \langle u, I \rangle \in [[\mathcal{V}]]$.
 }
 
 \begin{definition}\label{definition:inductive_statements}
@@ -60,3 +57,15 @@ It describes all reachable configurations from initial configurations through a 
    \forall u \rightsquigarrow_\mathcal{T} \, . \, if u \models I
     \, then \, v \models I \rbrace\]
 }
+\begin{definition}\label{definition:potential_reachability}
+    Potential reachability.
+\end{definition}
+\textit{
+   Let $\mathcal{R} = \langle \Sigma, \mathcal{I}, \mathcal{T} \rangle$ be any \textit{RTS}
+   and $\langle \Gamma, \mathcal{V} \rangle$ any interpretation.
+   We write $u \Rightarrow_{\mathcal{V}} v$ if and only if $u \models_{\mathcal{V}} v$
+   for all $I \in target_\mathcal{V}(u) \bigcap Inductive_\mathcal{V}(\mathcal{R})$.
+   }
+   $\overset{Inductive}{\Longrightarrow_{\mathcal{V}}}$
+
+   \section{Concrete interpretations}

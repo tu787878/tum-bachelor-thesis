@@ -13,17 +13,21 @@ this reason, we are interested in \textit{property checking} or \textit{model ch
 It has found a wide range of applications spanning from adaptive model checking.
 \paragraph*{}
 % Introduce model checking, then regular model checking, then inductive statements
-\textit{Model checking} is a powerful technique for automatic verification of finite state 
-concurrent systems \cite{clarke2009model}. 
-In this thesis, we only focus on \textit{regular model checking}, which is a important 
-framework for infinite state model-checking. The model is typically a regular 
-transition system. It describes the potential behavior of discrete systems by representing 
-it in finite state automaton. In \cite{clarke2009model} the author introduces an approach, 
-that uses the inductive statements for the regular transition for checking 
-safety conditions. ``Statement $\psi$ is inductive if the transition relation only relates 
-a state $\nu$ satisfying $\psi$ with states that also satisfy $\psi$. Thus, the set of 
-all states that satisfy $\psi$ over-approximates the set of all states reachable from $\nu$''.
-
+We here consider the verification of safety properties similar to the original 
+Regular Model Checking framework, where a program is represented using symbols 
+and finite automata.
+To be more specific, our goal is to confirm that a given program cannot execute 
+in a way that starts from a set of initial configurations ($\mathcal{I}$) and leads to a group 
+of dedicated bad configurations ($\mathcal{B}$). These bad configurations represent conditions 
+that should not happen during the program's execution. However, this is an 
+undecidable question in general and tools for Regular Model Checking are 
+necessarily incomplete. 
+A solution to this problem was proposed in \cite*{clarke2009model}, which utilizes 
+$\textit{inductive statements}$ to ensure that no undesired configuration can be reached 
+from any initial configuration. This means that for every pair of initial 
+and undesired configurations, there is at least one inductive statement that 
+is satisfied by the initial configuration but not by the undesired one. 
+By doing this, it can be concluded that no undesired configuration can be reached.
 \paragraph*{}
 % Introduce learning for inductive statements
 Based on automata learning, one can learn a set of inductive statements that are powerful 
