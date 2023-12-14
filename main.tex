@@ -16,13 +16,12 @@
 \newcommand*{\getSchool}{Computation, Information and Technology}
 \newcommand*{\getTitle}{Evaluating learning algorithms: An efficient way/Efficient ways to find Regular Inductive Statements}
 \newcommand*{\getTitleGer}{Titel der Abschlussarbeit}
-\newcommand*{\getAuthor}{Author}
-\newcommand*{\getDoctype}{Bachelor's Thesis, Master's Thesis, \ldots}
-\newcommand*{\getSupervisor}{Supervisor}
-\newcommand*{\getAdvisor}{Advisor}
+\newcommand*{\getAuthor}{Van Tu Nguyen}
+\newcommand*{\getDoctype}{Bachelor's Thesis}
+\newcommand*{\getSupervisor}{Prof. Dr. Dr. h. c. Javier Esparza}
+\newcommand*{\getAdvisor}{Dr. Christoph Welzel-Mohr}
 \newcommand*{\getSubmissionDate}{Submission date}
 \newcommand*{\getSubmissionLocation}{Munich}
-
 \newtheoremstyle{colon}%
 {}
 {}
@@ -34,10 +33,71 @@
 {}
 \theoremstyle{colon}
 \newtheorem{definition}{Definition}[chapter]
+\newenvironment{fdefinition}
+  {\begin{mdframed}\begin{definition}}
+  {\end{definition}\end{mdframed}}
 
 \theoremstyle{colon}
 \newtheorem{example}{Example}[chapter]
 
+\theoremstyle{colon}
+\newtheorem{lemma}{Lemma}[chapter]
+\makeatletter
+\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Theorem
+\newcounter{theo}[chapter] \setcounter{theo}{0}
+\renewcommand{\thetheo}{\arabic{chapter}.\arabic{theo}}
+\newenvironment{theo}[2][]{%
+\refstepcounter{theo}%
+\ifstrempty{#1}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=blue!20]
+{\strut Definition~\thetheo};}}
+}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=blue!20]
+{\strut Definition~\thetheo:~#1};}}%
+}%
+\mdfsetup{innertopmargin=10pt,linecolor=blue!20,%
+linewidth=2pt,topline=true,%
+frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+}
+\begin{mdframed}[]\relax%
+\label{#2}}{\end{mdframed}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Lemma
+\newcounter{lem}[chapter]\setcounter{lem}{0}
+\renewcommand{\thelem}{\arabic{chapter}.\arabic{lem}}
+\newenvironment{lem}[2][]{%
+\refstepcounter{lem}%
+\ifstrempty{#1}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=green!20]
+{\strut Automaton~\thelem};}}
+}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=green!20]
+{\strut Automaton~\thetheo:~#1};}}%
+}%
+\mdfsetup{innertopmargin=10pt,linecolor=green!20,%
+linewidth=2pt,topline=true,%
+frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+}
+\begin{mdframed}[]\relax%
+\label{#2}}{\end{mdframed}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
 % Set page numbering to avoid "destination with the same identifier has been already used" warning for cover page.

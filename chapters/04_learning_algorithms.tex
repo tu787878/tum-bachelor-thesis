@@ -3,7 +3,7 @@ Learning automata is a computational model for solving problems, where an agent 
 to optimize its behavior by interacting with an unknown environment. 
 The agent, also known as a learner, 
 observes the feedback from the teacher, updates its internal state, and adjusts its 
-actions accordingly. The $\textit{Teacher}$ 
+actions accordingly. 
 This interaction process between the $\textit{Learner}$ and the $\textit{Teacher}$ 
 is the primary mechanism of learning automata.
 In the field of automata learning, there are generally two distinct settings: 
@@ -37,9 +37,9 @@ language $\mathcal{L}$ and return "yes", otherwise return an counterexample $u \
 $u \in \mathcal{L}(\mathcal{M}) \Longleftrightarrow u \notin \mathcal{L}$ or 
 $u \in \mathcal{L} \Longleftrightarrow u \notin \mathcal{L}(\mathcal{M})$.
 \paragraph*{}
-On equivalent oracle, the $\textit{Teacher}$ can return a positive counterexample or a negative counterexample.
+On equivalent oracle, the $\textit{Teacher}$ can return a positive counterexample or a negative counterexample \cite{chen2017learning}.
 A positive counterexample is a missing word in the conjecture but present in the target.
-The negative one is defined similarly.
+The negative one is defined symmetic.
 
 It is crucial for the $\textit{Teacher}$ to have a clear and specific understanding of the 
 correct hypothesis.
@@ -50,14 +50,167 @@ A learning algorithm—often called learner—learns a regular target
 language $\mathcal{L} \subset \Sigma^{*}$ over an a priori fixed alphabet $\Sigma$ by actively querying a teacher.
 We apply several of these algorithms in the course of this thesis.
 \subsection{L*}
-L* learning automata was introduced by Angluin in 1987.
+L* learning automata was introduced by Angluin in 1987 \cite{ANGLUIN198787},
+also called Angluin's algorithm.
+Angluin's algorithm has the ability to learn a 
+regular set which is unknown initially, from any \textit{Teachers}.
+During the learning process, it stores
+information in an observation table 
+$\mathcal{O} = (S, E, T)$ where $S \subseteq \Sigma^*$ is a nonempty
+\textit{prefix-closed} \footnote{A set of strings S is called prefix-closed if: $uv \in S \implies u \in S$} set, 
+a finite \textit{suffix-closed} \footnote{A set of strings S is called suffix-closed if: $uv \in S \implies v \in S$} set E,
+and T : $(S \cup S \cdot A) \cdot E \rightarrow \lbrace 0, 1 \rbrace$ 
+is a mapping that stores the table entries.
+The algorithm maintains $T(u) = 1$ if and only if $u$ is accepted by the target language for all 
+$u \in (S \cup S \cdot A) \cdot E$.
+
+Let's take a closer look at the inner workings of the \textit{Angluin's algorithm}.
+For each $row(s)$ of the table, where $s \in S$ denotes a function
+\[
+  f_s : E \rightarrow \lbrace 0, 1 \rbrace \,\, with \,\, f_s(e) = T(s \cdot e)  
+\]
+The overvation table has two properties: \textit{closed} and \textit{consistent}.
+An observation table is called \textit{closed} provided that
+for each t in $S \cdot A$ there exists an s in S 
+such that row(t) = row(s).
+An observation table is called \textit{consistent} provided that 
+whenever $s_1$ and $s_2$ are elements of S such that
+row($s_1$) = row($s_2$) for all a in A, 
+row($s_1 \cdot a$) = row($s_2 \cdot a$).
+Once the table is \textit{closed} and \textit{consistent}, we can build a deterministic finite-state acceptor,
+which also is called \textit{conjecture}, by using the observation table.
+More precisely, \textit{Angluin's algorithm} constructs the DFA 
+$\mathcal{H} = (Q, q_0, \Sigma, \delta, F)$ where:
+\[
+  Q = \lbrace row(s): s \in S \rbrace,
+\]
+\[
+  q_0 = row(\lambda),
+\]
+\[
+  F = \lbrace row(s): s \in S \,\, and \,\, T(s)  = 1\rbrace,
+\]
+\[
+  \delta(row(s),a) = row(s \cdot a).
+\]
+Basically these two conditions \textit{closed} and \textit{consistent} 
+guarantee that the transitions is well-defined.
+The observation table is \textit{closed} ensures that every row in the lower part also occurs in the uper part.
+In other words, the row labeled by elements
+of S are the candidates of states of the automaton.
+\textit{Consistent} condition implies that both words lead to the same 
+state in the automaton, as they cannot be distinguished by any $a \in \Sigma^*$.
+
+The peseudocode \ref{alg:angluin_algorithm} presents Algluin's algorithm in pseudocode.
+Essentialy, in the begin of learning process, the algorithm guarantees that the table are \textit{closed}
+and \textit{consistent} by repeatly modifiding the columns and also the rows of the table.
+After every extension of the table,
+the algorithm fill the table by asking the membership queries for all table entries 
+$u \in (R \cup R \cdot \Sigma) \cdot S$ for which no membership is yet present by asking the \textit{Teacher} the membership queries. If the \textit{Teacher} replies "yes",
+then set $T(u) = 1$, otherwise  $T(u) = 0$.
+Once this is the case, the observation table satifies the conditions, Angluin’s algorithm constructs a conjecture, which it submits
+to an equivalence query. The learning terminates once the teacher replies “yes” on
+an equivalence query.
+However, if the Teacher returns a new counterexample $t \in \Sigma^*$ the algorithm modifies the table 
+by adding t and its prefixes to S and repeats the process by going to line 1.
+\begin{algorithm}
+    \caption{Algluin's learning algorithm \cite{ANGLUIN198787}}\label{alg:angluin_algorithm}
+    \textbf{Input: } A teacher for a regular language $L \subseteq \Sigma^*$
+    
+    Initialize the observation table (S, E, T)
+    
+    Ask membership queries for $\lambda$ and each $a \in \Sigma$
+    
+    Repeat:
+        \begin{algorithmic}[1]
+            \While{(S,E,T) is not closed or not consistent}
+                \If{(S,E,T) is not consistent}
+                    \State find $s_1$ and $s_2$ in S, and $e \in E$ such that                 
+                    \State $row(s_1) = row(s_2)$ and $T(s_1 \cdot a \cdot e) \neq T(s_2 \cdot a \cdot e)$,            
+                    \State add $a \cdot e$ to E,      
+                    \State conducts membership queries.
+                \EndIf
+
+                \If{(S,E,T) is not closed}
+                    \State find $s_1$ and $a \in \Sigma $ such that             
+                    \State $row(s_1 \cdot a)$ is different from $row(s)$ for all $s \in S$,            
+                    \State add $s_1 \cdot a$ to S,      
+                    \State conducts membership queries.
+                \EndIf
+            \EndWhile
+            \State Once (S, E, T) is closed and consistent, make $M = M(S,E,T)$
+            \If{the Teacher replies with a counter-example t, then}
+                    \State add t and all its prefixes to S         
+                    \State conducts membership queries.
+                \EndIf
+        \end{algorithmic}
+    Util the Teacher replies "yes"
+
+    Terminate and return a conjecture $\mathcal{M}$
+    \end{algorithm}
+
 \subsection{NL*}
 In general, a nondeterministic finite automata \textit{NFA} is often preferable to a 
 deterministic finite automata \textit{DFA} due to potentially exponential 
-differences in their sizes (REFERENCE FOR COMPARISON OF NFA AND DFA). As such, 
-learning algorithms for \textit{NFA} are needed.
-In this section, we will introduce another active learning algorithm called the \textit{NL*} algorithm,
-patterned after \textit{L*}. The \textit{NL*} infers a canonical residual finite-state automata, 
-a subclass of nondeterministic finite automata was introduced in the seminar work \cite*{clarke2009model}.
+differences in their sizes (REFERENCE FOR COMPARISON OF NFA AND DFA).
+Therefore, learning algorithms for nondeterministic finite automata (NFA) are required.
+In this section, we will introduce another active learning algorithm called the \textit{NL*} algorithm \cite*{Bollig2009AngluinStyleLO},
+based on \textit{L*}. The \textit{NL*} concludes a residual finite-state automata (RFSA), 
+a subclass of nondeterministic finite automata was introduced in the seminar work \cite*{10.1007/3-540-44693-1_13}.
+
+Technically, it is possible to learn an RFSA instead of a DFA by modifying Angluin's algorithm $L^*$ observation table.
+The proposed method involves selecting \textit{prime rows}\footnote{\label{notenl}\textit{prime row, RFSA-closed, RFSA-consitency} are defined in \cite{Bollig2009AngluinStyleLO}} as representations of the automaton's states, 
+rather than utilizing \textit{all rows} of the table. 
+The proceed of the \textit{$NL^*$} learning algorithm is mainly the same with \textit{L*}.
+Similar to \textit{$L^*$}, it is also repeatedly checked the \textit{RFSA-closed}\footnoteref{notenl}
+and \textit{RFSA-consitency}\footnoteref{notenl} properties, once the both properties are fullfill, 
+it can contruct the conjecture and ask the equivalent query to the teacher.
+
 \subsection{Kearns-Vazirani}
+Another active learning algortihm is introduced in this thesis is \textit{Kearns and Vazirani's} \cite*{kearns1994introduction}.
+Unlike \textit{Angluin's algorithm} it organizes its data in an ordered binary tree. 
+It aims to minimize the number of membership queries by storing only one representative for 
+each L-equivalence class in the tree.
+The data are stored in two non-empty set $R, S \subseteq \Sigma$, where R consists
+of \textit{representatives} that are used to represent the equivalence classes of L.
+The set S includes \textit{separating words} that are used to verify that two 
+different representatives indeed represent different equivalent classes.
+More formally, \textit{Kearns-Vazirani's} algortihm keeps a separating word $v \in S$
+for any two  representatives $u \ne u' \in R$ such that $uv \in L \Leftrightarrow uv \notin L$ is satisfied.
+
+The organization of the binary tree is simple, while the inner nodes are labeled with 
+the word of S, the leaf nodes are labled with words of R. The algorithm labels the root node's 
+with $\epsilon \in S$.
+The main property is that for each subtree, it places on the subtree's root $v \in S$
+and all the $u \in R$ depending on whether $uv \in L$ or not. When $uv \notin L$ u is put in the left subtree.
+Otherwise, $uv \in L$ u will be put in the right subtree. 
+This procedure is recursively repeated at each subtree until all representatives
+are put in their own leaf node.
+
+The conjecture of \textit{Kearns-Vazirani's} algorithm is defined following: DFA $\mathcal{H} = (Q, \Sigma, q_o, \delta, F)$.
+Where the set of states $Q = R$. The final states F consist of all representatives $u \in R$
+that are located in the right subtree of the root node. 
+Since $\epsilon$ is always an element of R, the initial state $q_0 = \epsilon$.
 \subsection{Rivest-Schapire}
+The last algorithm we will introduce in this thesis is \textit{Rivest and Schapire}.
+The different of this algortihm to \textit{Angluin's algorithm} is,
+that uses a \textit{reduced} version of Angluin's observation table
+that stores exactly one representative per L-equivalence class.
+The advantages are storing less data and asking less memberships queries.
+(In fact, this method has originally been introduced by Schapire). 
+\section{Libalf: the Automata Learning Framework}\label{section:libalf}
+*\textit{Libalf} is a comprehensive, open-source program library
+for learning finite automata. It was used for a large share of the
+experiments conducted in this thesis, and many of the 
+algorithms used or developed in later chapters habe between
+integrated into the library.*
+It supports both for active and passive algorithms but 
+in this thesis we only consider the active algorithms.
+The basis libraries that are required for libalf are libAmore and
+libAmore++ that support for representing the automaton
+such that NFA and DFA.
+
+Internlly, \textit{libalf} represents words as list symbols
+where each symbol is an integer data type. Thus, the maximal size
+of an alphabet is $2^{32}$ or $2^{64}$ depending on the architecture of the 
+target machine.

@@ -1,41 +1,50 @@
 \chapter{Implementation}\label{chapter:implementation}
 
-We apply automata learning algorithms to solve the regular model checking problems
-as well as finding an inductive statements for regular transition system.
+We use automata learning algorithms to solve regular 
+model checking problems and generate inductive statements for a regular transition system.
 
-\paragraph*{Membership query}
+\section{Membership oracle}
 On a membership oracle, the learner provides a statement and asks the teacher if 
-this statement whether inductive or not. As we described in \autoref{chapter:inductive_statement}, 
+this statement whether inductive or not. As we described in Definition \ref{definition:inductive_statements}, 
 a statement $I$ is \textit{inductive} if, for any transition $v \rightsquigarrow u$
 where $u$ satisfies $I$, $u$ also satisfies the statement.
-REF TO ABOVE DEFINITION.
-Therefore, one can simply implement the Membership Oracle by checking the acceptance 
-of $\mathcal{M}$ while $\mathcal{M}$ is an automaton for 
-$\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$ and negating the answer.
+Oone can implement the Membership Oracle by checking the acceptance 
+of $\mathcal{M}$, where $\mathcal{M}$ is an automaton for 
+$\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$ and negating the answer (Algorithm \ref{alg:membership}).
 The $\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$ is defined by:
-\[ \overline{Inductive_{\mathcal{V}}(\mathcal{R})} = \lbrace I \in \Gamma^* \, | \, \exists u
+
+\begin{equation}\label{eq:non_inductive}
+\overline{Inductive_{\mathcal{V}}(\mathcal{R})} = \lbrace I \in \Gamma^* \, | \, \exists u
 \rightsquigarrow_\mathcal{T} w \, . \, u \models \, I \, and \, w \, \not\models I\rbrace
-\]
+\end{equation}
 
 Let $\mathcal{T} =  \langle P, \Sigma \times \Sigma, \Delta, p_0, E \rangle$ 
-is a transducer and  $\mathcal{V} =  \langle P, \Sigma \times \Gamma, \delta, q_0, F \rangle$ is 
+is a transducer and  $\mathcal{V} =  \langle Q, \Sigma \times \Gamma, \delta, q_0, F \rangle$ is 
 an interpretation. The automaton of $\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$ 
 is defined by $\langle Q \times P \times Q, \Gamma, \triangle, \langle q_o,  p_0, q_o \rangle, 
 E \times F \times (Q \setminus F) \rangle$ where
 
-\[
-    \triangle(\langle q_1, p, q_2 \rangle, I) = \delta()
-\]
-
-
+\begin{equation*}
+    \triangle(\langle q_1, p, q_2 \rangle, I) =  \exists \langle \sigma_1, \sigma_2 \rangle \in \Sigma \times \Sigma. \,\,\,
+    (\delta(q_1, \langle \sigma_1, I \rangle) ,\, \Delta(p, \langle \sigma_1, \sigma_2 \rangle) ,\, \delta(q_2, \langle \sigma_2, I \rangle))
+\end{equation*}
+The states that are accepted by this automaton when each its parts are satified: 
+\begin{align*} 
+    \delta(q_1, \langle \sigma_1, I \rangle) \in  F \\
+    \Delta(p, \langle \sigma_1, \sigma_2 \rangle) \in E \\
+    \delta(q_2, \langle \sigma_2, I \rangle) \notin  F
+\end{align*}
+For every pair of initial word and its reached word through the transducer.
+Where the initial word is satified by the statement I, the reached word is not.
+From \ref{eq:non_inductive} it can guarantee that all statements, that are acepted by this automaton, are non-inductive.
 \begin{algorithm}
-\caption{Membership query}\label{alg:membership}
+\caption{Membership oracle}\label{alg:membership}
 \textbf{Input: } \textit{Statement} $\mathcal{I}$ 
 
 \textbf{Output: } \textit{True} or \textit{False}
 
 begin
-\begin{algorithmic}
+\begin{algorithmic}[1]
     \State $\mathcal{M} \gets getAutomaton(\overline{Inductive_{\mathcal{V}}(\mathcal{R})})$
     \If{$\mathcal{I} \in \mathcal{L}(\mathcal{M}) $}
         \State return \textit{false};
@@ -45,23 +54,215 @@ begin
 \end{algorithmic}
 end
 \end{algorithm}
+\section{Equivalent oracle}
+Now the teacher receives a conjecture as input by learner, the teacher will check if
+the conjecture satifies the safety property and return \textit{true} if yes. 
+Otherwise, the learner receives a counterexample and repeats its process.
 
 \begin{algorithm}
-    \caption{Equivalent query}\label{alg:cap}
-    \begin{algorithmic}
-    \Require $n \geq 0$
-    \Ensure $y = x^n$
-    \State $y \gets 1$
-    \State $X \gets x$
-    \State $N \gets n$
-    \While{$N \neq 0$}
-    \If{$N$ is even}
-        \State $X \gets X \times X$
-        \State $N \gets \frac{N}{2}$  \Comment{This is a comment}
-    \ElsIf{$N$ is odd}
-        \State $y \gets y \times X$
-        \State $N \gets N - 1$
-    \EndIf
-    \EndWhile
+    \caption{Equivalent oracle}\label{alg:equivalence}
+    \textbf{Input: } \textit{Statement} $\mathcal{I}$ 
+
+    \textbf{Output: } \textit{True}, X, or $I \in \Gamma^*$
+    
+    begin
+    \begin{algorithmic}[1]
+        \State $\mathcal{M} \gets getAutomaton(\overline{Inductive_{\mathcal{V}}(\mathcal{R})})$
+        \If {$\mathcal{L}(\mathcal{H}) \cap \mathcal{L}(\mathcal{M}) \neq \emptyset$} \Comment{Make sure that all statements are inductive}
+            \State return $I \in \mathcal{L}(\mathcal{H}) \cap \mathcal{L}(\mathcal{M})$
+        \EndIf
+
+        \State $\mathcal{D} \leftarrow getAutomatonFor(\mathcal{L}(\mathcal{I}) \circ \overset{\mathcal{L}(\mathcal{H})}{\Rightarrow} \circ \mathcal{L}(\mathcal{B})) $
+        \Comment{Check safety property}
+
+        \If {$\mathcal{D} = \emptyset$}
+            \State return True
+        \EndIf
+
+        \State $[\substack{u_1 \\ v_1}] \dots [\substack{u_n \\ v_n}] \leftarrow getWordFrom(\mathcal{L}(\mathcal{D}))$
+        \State $I = disprove([\substack{u_1 \\ v_1}] \dots [\substack{u_n \\ v_n}])$
+        
+        \If {$I = null$}
+            \State return X \Comment{throw exception when can not disprove}
+        \EndIf
+        \State return I
     \end{algorithmic}
-    \end{algorithm}
+    end
+\end{algorithm}
+
+Firstly, we want to make sure that the automaton only accepts 
+inductive statements. 
+Again, we get the automaton of $\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$,
+find the intersection with the hypothesis.
+If exists any non-inductive statement in the hypothesis,
+return it as counterexample.
+
+Since hypothesis $\mathcal{H}$ does not accept any 
+non-inductive statement, we will check with the safety problems
+to make sure that the hypothesis strong enough.
+Intuitively, the automaton $\mathcal{D}$ contains all pairs from initial and bad words,
+which is induced by the inductive statements $\mathcal{L}(\mathcal{H})$.
+In other words, the safety property is that the inductive statements should not induce the
+initial and bad word. We return true and terminates the algorithm if $\mathcal{L}(\mathcal{D}) = \emptyset$.
+Otherwise we obtain a counterexample 
+$\langle u_1 \dots u_n, \, v_1 \dots v_n \rangle \in \mathcal{L}(\mathcal{D})$.
+From Lemma \ref{lemma:abstractly_reachable}, we can see that $\mathcal{D}$ is intuitively the intersection of
+the automaton $[[C]]$ and $\mathcal{I} \circ  \mathcal{B}$.
+Because regular languages are closed under complement, $[[\overline{C}]]$ is defined with:
+\begin{equation}
+    [[\overline{C}]] = \left\lbrace \langle u,v\rangle \in \bigcup_{n \geq 0} \Sigma^n \times \Sigma^n \, | \, \exists I \in \mathcal{L}(S) \, . \, if \, u \, \models_{\mathcal{V}} \, I \, then \, v \not\models_{\mathcal{V}} I \right\rbrace
+\end{equation}
+Since computing $[[\overline{C}]]$ is more effectively, we will construct the automaton for $[[\overline{C}]]$ and complement it.
+Let $S =  \langle P, \Gamma, \Delta, p_0, E \rangle$ 
+is a transducer and  $\mathcal{V} =  \langle Q, \Sigma \times \Gamma, \delta, q_0, F \rangle$ is 
+an interpretation. The automaton of $\overline{[[C]]}$ 
+is defined by $\langle Q \times P \times Q, \Sigma \times \Sigma, \triangle, \langle q_o,  p_0, q_o \rangle, 
+E \times F \times (Q \setminus F) \rangle$ where
+\begin{equation*}
+    \triangle(\langle q_1, p, q_2 \rangle, \langle \sigma_1, \sigma_2 \rangle) =  \exists I \in \Gamma. \,\,\,
+    (\delta(q_1, \langle \sigma_1, I \rangle) ,\, \Delta(p, I) ,\, \delta(q_2, \langle \sigma_2, I \rangle))
+\end{equation*}
+The states that are accepted by this automaton when each its parts are satified: 
+\begin{align*} 
+    \delta(q_1, \langle \sigma_1, I \rangle) \in  F \\
+    \Delta(p, I) \in E \\
+    \delta(q_2, \langle \sigma_2, I \rangle) \notin  F
+\end{align*}
+
+Now we want to find a counterexample $I \in Inductive_{\mathcal{V}}(\mathcal{R})$ for the hypothesis, such that $u_1 \dots u_n \models_v I$
+and $v_1 \dots v_n \not\models I$ to make sure that our inductive statements do not
+induce this pair any more.
+We can also call I an active counterexample since I is in the target language but was missing in 
+the candicate language. 
+
+\section{The word problem}
+It leads to the question whether $I \in Inductive_{\mathcal{V}}(\mathcal{R})$ exists such that $u_1 \dots u_n \models_v I$
+and $v_1 \dots v_n \not\models I$.
+Because this problem (proved in \cite{latex}) is in NP, it can be reduced, in polynomial time, to SAT (since
+SAT is NP-hard).
+Additionally, we show that Problem 3.1 can
+be solved in PTime for the interpretations $V_{trap}$ and $V_{siphon}$ .
+
+\paragraph*{Flow interpretation}
+In this thesis we will use the CNF-SAT to extract separating inductive statements.
+This means that the entire formular is a conjunction (AND) of clauses, 
+where each clause is a disjunction (OR) of literals.
+We define for each pair $\langle \sigma, i \rangle$ where $\sigma \in \Sigma$ and $1 \leq i \leq n$ a literal.
+Intuitively, $\sigma \in I_i$ if and only if the  model value of this literal is true.
+Firstly, we introduce the macro
+\begin{equation*}
+    ExactlyOne(V) = \bigvee_{v \in V} v \wedge \bigwedge_{v,v'\in V: v \neq v'} \lnot (v \wedge v')
+\end{equation*}
+Recall that a statement is not inductive if there exists one transition
+$[\substack{u_1 \\ v_1}] \dots [\substack{u_n \\ v_n}]$ that is accepted by transducer $\mathcal{T}$
+for which holds that $x_1 \dots x_n \models I_1 \dots I_n$ and $y_1 \dots y_n \not\models_{\mathcal{V}_{flow}} I_1 \dots I_n$.
+Formally, we add these clauses to the formular:
+\begin{equation}\label{qu:exactlyOne}
+    ExactlyOne(\bigcup_{1 \leq i \leq n} \{ \langle u_i, i \rangle \})
+\end{equation}
+and 
+\begin{equation}\label{qu:notExactlyOne}
+    \lnot ExactlyOne(\bigcup_{1 \leq i \leq n} \{ \langle v_i, i \rangle \})
+\end{equation}
+The clause \ref{qu:exactlyOne} guarantee that there is exactly
+$1 \leq i \leq n$ such that $x_i \in I_i$. 
+The clause \ref{qu:notExactlyOne} guarantee that either there is no 
+or more than one $1 \leq i \leq n$ such that $x_i \in I_i$.
+Semantically, we define a state $\langle l,q,k \rangle \in \{0,1\} \times Q_{\mathcal{T}} \times \{0,1,2\}$ 
+corresponds to the observation that one
+can reach the state q of $\mathcal{T}$ with a word $[\substack{u_1 \\ v_1}] \dots [\substack{u_n \\ v_n}]$
+such that there are k many indices i where $x_i \in I_i$, on the other hand,
+there are l many indices j where $y_j \in I_j$.
+Now we make sure that for every pair $[x,y]$, which we consider, is accepted
+by the \textit{transducer} $\mathcal{T}$.
+Futhermore, statement I at the final step should not induce the source and target 
+configuration. 
+
+\begin{multline}
+    \bigvee_{q_0 \in Q_0^{\mathcal{T}}} \langle \langle 0, q_0, 0 \rangle , 0 \rangle \wedge \lnot \bigvee_{f \in F_{\mathcal{T}}} \langle \langle 1,f,0 \rangle,n \rangle \vee \langle \langle 1,f,2\rangle,n \rangle\\
+    \wedge \bigwedge_{1 \leq i \leq n, \,\, \left\langle q, \left[\substack{x \\ y}\right],p \right\rangle \in \Delta_{\mathcal{T}}}
+    \begin{pmatrix}
+        \langle \langle 0,q,0 \rangle,i \rangle \wedge \langle x, i+1 \rangle \wedge \langle y, i+1 \rangle \implies \langle \langle 1,p,1 \rangle,i+1 \rangle \\
+        \wedge \langle \langle 0,q,1 \rangle,i \rangle \wedge \langle x, i+1 \rangle \wedge \langle y, i+1 \rangle \implies \langle \langle 1,p,2 \rangle,i+1 \rangle \\
+        \wedge \langle \langle 0,q,2 \rangle,i \rangle \wedge \langle x, i+1 \rangle \wedge \langle y, i+1 \rangle \implies \langle \langle 1,p,2 \rangle,i+1 \rangle \\
+        \wedge \bigwedge_{k \in \{0,1\}}
+        \begin{pmatrix}
+            \langle \langle k,q,0 \rangle,i \rangle \wedge \lnot \langle x, i+1 \rangle \wedge \langle y, i+1 \rangle \implies \langle \langle k,p,1 \rangle,i+1 \rangle \\
+        \wedge \langle \langle k,q,1 \rangle,i \rangle \wedge \lnot \langle x, i+1 \rangle \wedge \langle y, i+1 \rangle \implies \langle \langle k,p,2 \rangle,i+1 \rangle \\
+        \wedge \langle \langle k,q,2 \rangle,i \rangle \wedge \lnot \langle x, i+1 \rangle \wedge \langle y, i+1 \rangle \implies \langle \langle k,p,2 \rangle,i+1 \rangle
+        \end{pmatrix} \\
+        \wedge \bigwedge_{l \in \{0,1,2\}}
+        \begin{pmatrix}
+            \langle \langle 0,q,l \rangle,i \rangle \wedge \langle x, i+1 \rangle \wedge \lnot \langle y, i+1 \rangle \implies \langle \langle 1,p,l \rangle,i+1 \rangle \\
+        \wedge \langle \langle 0,q,l \rangle,i \rangle \wedge \langle x, i+1 \rangle \wedge \lnot \langle y, i+1 \rangle \implies \langle \langle 1,p,l \rangle,i+1 \rangle
+        \end{pmatrix} \\
+        \wedge \bigwedge_{k \in \{0,1\} \,\, l \in \{0,1,2\} }
+        \begin{pmatrix}
+            \langle \langle k,q,l \rangle,i \rangle \wedge \lnot \langle x, i+1 \rangle \wedge \lnot \langle y, i+1 \rangle \implies \langle \langle k,p,l \rangle,i+1 \rangle
+        \end{pmatrix}
+    \end{pmatrix}
+\end{multline}
+
+Therefore, $I_i = \{ \sigma \in \Sigma \, | \, modelValue(\langle \sigma, i \rangle) = true\}$.
+
+\paragraph*{SAT-Solver for trap and siphon interpretation}
+Analogous to flow interpretation, we can also use SAT-Solver to find the 
+separating inductive statement. We only consider for trap interpretation, the 
+siphon is analog.
+In this case, we change the format of the state product to 
+$Q_{\mathcal{T}} \times \{true, false\}$. 
+Sequentially, the initial and final states are defined 
+\begin{equation*}
+    \bigvee_{q_0 \in Q_0^{\mathcal{T}}} \langle \langle q_0, false\rangle , 0 \rangle \wedge \lnot \bigvee_{f \in F_{\mathcal{T}}} \langle \langle f,true \rangle,n \rangle
+\end{equation*}
+The transitions should be following:
+\begin{multline}
+    \wedge \bigwedge_{1 \leq i \leq n, \,\, \left\langle q, \left[\substack{x \\ y}\right],p \right\rangle \in \Delta_{\mathcal{T}}}
+    \begin{pmatrix}
+        \langle \langle q,false \rangle,i \rangle \wedge \lnot \langle x, i+1 \rangle \wedge \lnot \langle y, i+1 \rangle \implies \langle \langle p,false \rangle,i+1 \rangle \\
+        \wedge \langle \langle q,false \rangle,i \rangle \wedge \langle x, i+1 \rangle \wedge \lnot \langle y, i+1 \rangle \implies \langle \langle p,true \rangle,i+1 \rangle \\
+        \wedge \langle \langle q,true \rangle,i \rangle \wedge \lnot \langle y, i+1 \rangle \implies \langle \langle p,true \rangle,i+1 \rangle \\
+    \end{pmatrix}
+\end{multline}
+
+\paragraph{A polynomial time algorithm for the word problem for $\mathcal{V}_{trap}$ and $\mathcal{V}_{siphon}$}
+Again, we focus on Vtrap since the arguments for Vsiphon are analogous.
+Pseudocode \ref{algorihtm:disprove} show the method how we find the separating 
+statement for trap interpretation in polynomial time.
+We start with the statment $I = \Sigma \backslash \{y_1\} \dots \Sigma \backslash \{y_n\}$.
+If a transition $\left[\substack{x_1 \\ y_1}\right] \dots \left[\substack{x_n \\ y_n}\right]$ exists such that 
+$x_1 \dots x_n$ staifies the current statement and $y_1 \dots y_n$ does not,
+the removes  $x_i$ from the i-th letter of the statement for all $1 \leq i \leq n$.
+To prove this approach can be computed in polynomial time, refers to \cite{latex}.
+
+\begin{algorithm}
+    \caption{Disprove}\label{algorihtm:disprove}
+    \textbf{Input: } $\left[\substack{x_1 \\ y_1}\right] \dots \left[\substack{x_n \\ y_n}\right]$ and transducer $\mathcal{T}$
+
+    \textbf{Output: } Inductive statement I
+    
+    begin
+    \begin{algorithmic}[1]
+        \For{$i = 1; \, i \leq n; \, i = i+1 $} 
+            \State {$I_i = \Sigma \backslash \{y_i\}$} 
+        \EndFor
+        \While{$\langle v, I \rangle \in \mathcal{L}(\mathcal{V}_{trap})$}
+            \If {$\exists \left[\substack{x_1 \\ y_1}\right] \dots \left[\substack{x_n \\ y_n}\right]$ where $u_1 \dots u_n \models I$ and $v_1 \dots v_n \not\models I$} 
+                \For{$i = 1; \, i \leq n; \, i = i+1 $}     
+                    \State {$I_i = I_i \backslash \{u_i\}$} 
+                \EndFor
+            \Else
+                \State return I
+            \EndIf
+        \EndWhile
+        \State return $\emptyset$
+    \end{algorithmic}
+    end
+\end{algorithm}
+
+*Note that the alphabet of the language that we learn is
+considerably large; i.e. exponentially larger than the alphabet
+of the RTS. \textit{Libalf} supports starting a learning process
+with some alphabet which can be expanded later if necessary.
+Therefore, we start the learning process with an empty alphabet 
+and gradually add those letter from  $2^\Sigma$. *

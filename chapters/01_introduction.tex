@@ -30,15 +30,33 @@ is satisfied by the initial configuration but not by the undesired one.
 By doing this, it can be concluded that no undesired configuration can be reached.
 \paragraph*{}
 % Introduce learning for inductive statements
-Based on automata learning, one can learn a set of inductive statements that are powerful 
-enough to establish a given safety property.
-The learned language of inductive statements is a certificate of the correctness of the 
-property. The purpose of this thesis is to collect and analyze empirical data on 
+Over the past decade, there has been a significant increase in the study of automata learning.
+This field has produced numerous successful applications, such as pattern and natural language recognition, 
+computational biology, data mining, robotics, automatic verification, and even the analysis of music.
+One can use autoamta learning to acquire a set of inductive statements that 
+are powerful enough to establish a given safety property. The language of these
+inductive statements serves as proof of the property's correctness.
+The purpose of this thesis is to collect and analyze empirical data on 
 the performance of learning algorithms such as L*, NL*, Kearns-Vazirani, Rivest-Schapire.
 
 
 \paragraph*{Structure of the thesis}
 \paragraph*{}
 
-In the first part of our thesis, we consider the regular transition system and 
-the set of all inductive statements. In the second part of the thesis,
+In this thesis, we begin with \autoref{chapter:preliminaries} by fixing notations and 
+definitions used throughout the thesis.
+In \autoref{chapter:inductive_statement}, we will thoroughly explain the
+\textit{Regular transition system} and \textit{Inductive statements} as an approach 
+for checking the safety properties of \textit{model checking}. 
+Subsequently, \autoref{chapter:learning_algorithm} gives a general introduction
+to active learning algorithm and their oracles.
+Furthermore, we will introduce some active learning algorithms used 
+for our experiments.
+\autoref{chapter:implementation} will investigate the C++-implemented programm to
+learn a set of inductive statements from a system configuation called \textit{dodo}. 
+The programm uses not only the \textit{Angluin's algorithm $L^*$}, but also 
+the \textit{$NL^*$}, \textit{Kearns-Vaziran} and \textit{Rivest-Schapi}.
+After learning process, it visualizes the graphs that can evaluate 
+the \textit{efficiency} and \textit{effectiveness} of these algorithms.
+Finally, we will summarize and assess our experment results in \autoref{chapter:experiment} 
+and conclude the thesis with \autoref{chapter:conclusion}.
