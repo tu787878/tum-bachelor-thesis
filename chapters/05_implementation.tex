@@ -55,9 +55,9 @@ begin
 end
 \end{algorithm}
 \section{Equivalent oracle}
-Now the teacher receives a conjecture as input by learner, the teacher will check if
-the conjecture satifies the safety property and return \textit{true} if yes. 
-Otherwise, the learner receives a counterexample and repeats its process.
+When the learner provides a conjecture, the teacher checks if it satisfies
+the safety property. It it does, the teacher return \textit{true}. Otherwise, the learner
+receives a counter example and repeates the proocess.
 
 \begin{algorithm}
     \caption{Equivalent oracle}\label{alg:equivalence}
@@ -90,12 +90,11 @@ Otherwise, the learner receives a counterexample and repeats its process.
     end
 \end{algorithm}
 
-Firstly, we want to make sure that the automaton only accepts 
+Firstly, we ensure the automaton only accepts 
 inductive statements. 
-Again, we get the automaton of $\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$,
-find the intersection with the hypothesis.
-If exists any non-inductive statement in the hypothesis,
-return it as counterexample.
+We intersect the automaton of $\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$ with the hypothesis.
+If there exists any non-inductive statement in the hypothesis,
+we return it as counterexample.
 
 Since hypothesis $\mathcal{H}$ does not accept any 
 non-inductive statement, we will check with the safety problems
@@ -129,30 +128,31 @@ The states that are accepted by this automaton when each its parts are satified:
     \delta(q_2, \langle \sigma_2, I \rangle) \notin  F
 \end{align*}
 
-Now we want to find a counterexample $I \in Inductive_{\mathcal{V}}(\mathcal{R})$ for the hypothesis, such that $u_1 \dots u_n \models_v I$
-and $v_1 \dots v_n \not\models I$ to make sure that our inductive statements do not
-induce this pair any more.
+\section{The word problem}
+We are now trying to locate a counterexample $I \in Inductive_{\mathcal{V}}(\mathcal{R})$ that disproves the given hypothesis. 
+This is done to ensure that $u_1 \dots u_n \models_v I$
+and $v_1 \dots v_n \not\models I$, our inductive statements will no longer induce this pair.
 We can also call I an active counterexample since I is in the target language but was missing in 
 the candicate language. 
-
-\section{The word problem}
-It leads to the question whether $I \in Inductive_{\mathcal{V}}(\mathcal{R})$ exists such that $u_1 \dots u_n \models_v I$
+It gives rise to the question whether $I \in Inductive_{\mathcal{V}}(\mathcal{R})$ exists such that $u_1 \dots u_n \models_v I$
 and $v_1 \dots v_n \not\models I$.
-Because this problem (proved in \cite{latex}) is in NP, it can be reduced, in polynomial time, to SAT (since
-SAT is NP-hard).
-Additionally, we show that Problem 3.1 can
-be solved in PTime for the interpretations $V_{trap}$ and $V_{siphon}$ .
+It was previously proven by \cite{latex} that this problem is in NP.
+Moreover, since SAT problem is NP-hard, it can be reduced to SAT.
 
 \paragraph*{Flow interpretation}
-In this thesis we will use the CNF-SAT to extract separating inductive statements.
-This means that the entire formular is a conjunction (AND) of clauses, 
-where each clause is a disjunction (OR) of literals.
-We define for each pair $\langle \sigma, i \rangle$ where $\sigma \in \Sigma$ and $1 \leq i \leq n$ a literal.
-Intuitively, $\sigma \in I_i$ if and only if the  model value of this literal is true.
-Firstly, we introduce the macro
+In this section, we will extract separating inductive statements using CNF-SAT. 
+The entire formular is a conjunction (AND) of clauses, where each clause is a disjunction (OR) of literals.
+The idea is, we assign each combination of an alphabet $\sigma \in \Sigma$ and the position 
+a variable. 
+In other words, a pair $\langle \sigma, i \rangle$ is a literal which assigns to a variable.
+The variables have two value: \textit{true} and \textit{false}.
+Therefore, $\sigma$ is a part of $I_i$ if and only if the  model value of the literal $\langle \sigma, i \rangle$ is true.
+Firstly, we introduce the helper function
 \begin{equation*}
     ExactlyOne(V) = \bigvee_{v \in V} v \wedge \bigwedge_{v,v'\in V: v \neq v'} \lnot (v \wedge v')
 \end{equation*}
+Intuitively, it generates a set of clauses that ensure that exactly one of the 
+literals evaluate to \textit{true}.
 Recall that a statement is not inductive if there exists one transition
 $[\substack{u_1 \\ v_1}] \dots [\substack{u_n \\ v_n}]$ that is accepted by transducer $\mathcal{T}$
 for which holds that $x_1 \dots x_n \models I_1 \dots I_n$ and $y_1 \dots y_n \not\models_{\mathcal{V}_{flow}} I_1 \dots I_n$.
@@ -164,7 +164,7 @@ and
 \begin{equation}\label{qu:notExactlyOne}
     \lnot ExactlyOne(\bigcup_{1 \leq i \leq n} \{ \langle v_i, i \rangle \})
 \end{equation}
-The clause \ref{qu:exactlyOne} guarantee that there is exactly
+The clause \ref{qu:exactlyOne} guarantee that there is exactly one
 $1 \leq i \leq n$ such that $x_i \in I_i$. 
 The clause \ref{qu:notExactlyOne} guarantee that either there is no 
 or more than one $1 \leq i \leq n$ such that $x_i \in I_i$.
@@ -177,6 +177,7 @@ Now we make sure that for every pair $[x,y]$, which we consider, is accepted
 by the \textit{transducer} $\mathcal{T}$.
 Futhermore, statement I at the final step should not induce the source and target 
 configuration. 
+We define encode the state product to literals and the proposition formular as following:
 
 \begin{multline}
     \bigvee_{q_0 \in Q_0^{\mathcal{T}}} \langle \langle 0, q_0, 0 \rangle , 0 \rangle \wedge \lnot \bigvee_{f \in F_{\mathcal{T}}} \langle \langle 1,f,0 \rangle,n \rangle \vee \langle \langle 1,f,2\rangle,n \rangle\\
@@ -203,15 +204,23 @@ configuration.
     \end{pmatrix}
 \end{multline}
 
-Therefore, $I_i = \{ \sigma \in \Sigma \, | \, modelValue(\langle \sigma, i \rangle) = true\}$.
+To solve the (CNF-)SAT problem we need to convert the entire of 
+logical formular in the CNF form, 
+which can be achieved by applying DeMorgan's laws \cite{enwiki:1184283195}.
 
 \paragraph*{SAT-Solver for trap and siphon interpretation}
-Analogous to flow interpretation, we can also use SAT-Solver to find the 
-separating inductive statement. We only consider for trap interpretation, the 
+We only consider for trap interpretation, the 
 siphon is analog.
-In this case, we change the format of the state product to 
+For a word $w$ to satisfy the statement I, there must be at least one indice
+i where $x_i \in I_i$.
+Unlike the state product used for Flow interpretation, k is now wither \textit{true} or \textit{false}, 
+depeding on whether there is at least one indice i
+where $y_i \in I_i$.
+We do not consider the the cases for l because l is always \textit{true}
+which ensure that x satisfy the statement.
+Therefore, we change the format of the state product to 
 $Q_{\mathcal{T}} \times \{true, false\}$. 
-Sequentially, the initial and final states are defined 
+Additionally, we define the rules for initial and final states sequentially: 
 \begin{equation*}
     \bigvee_{q_0 \in Q_0^{\mathcal{T}}} \langle \langle q_0, false\rangle , 0 \rangle \wedge \lnot \bigvee_{f \in F_{\mathcal{T}}} \langle \langle f,true \rangle,n \rangle
 \end{equation*}
@@ -226,13 +235,13 @@ The transitions should be following:
 \end{multline}
 
 \paragraph{A polynomial time algorithm for the word problem for $\mathcal{V}_{trap}$ and $\mathcal{V}_{siphon}$}
-Again, we focus on Vtrap since the arguments for Vsiphon are analogous.
-Pseudocode \ref{algorihtm:disprove} show the method how we find the separating 
+Again, we focus on $\mathcal{V}_{trap}$ since the arguments for $\mathcal{V}_{siphon}$ are analogous.
+Pseudocode \ref{algorihtm:disprove} shows how to find the separating 
 statement for trap interpretation in polynomial time.
 We start with the statment $I = \Sigma \backslash \{y_1\} \dots \Sigma \backslash \{y_n\}$.
 If a transition $\left[\substack{x_1 \\ y_1}\right] \dots \left[\substack{x_n \\ y_n}\right]$ exists such that 
-$x_1 \dots x_n$ staifies the current statement and $y_1 \dots y_n$ does not,
-the removes  $x_i$ from the i-th letter of the statement for all $1 \leq i \leq n$.
+$x_1 \dots x_n$ stisfies the current statement and $y_1 \dots y_n$ does not,
+then remove $x_i$ from the i-th letter of the statement for all $1 \leq i \leq n$.
 To prove this approach can be computed in polynomial time, refers to \cite{latex}.
 
 \begin{algorithm}
