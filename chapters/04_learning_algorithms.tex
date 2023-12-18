@@ -14,10 +14,11 @@ by asking further queries.
 However, in this thesis, our focus is solely on active learning.
 We do not introduce passive learning here but refer the interested reader to \cite*{clarke2009model}.
 
-This chapter aims to provide a deeper understanding of the process of learning automata, 
-including the roles and responsibilities of the $\textit{Teacher}$ and $\textit{Learner}$ in \autoref{section:teacher_learning}. 
-In \autoref{section:learner_learning}, we will introduce several of active algorithms 
-that use for our experiment.
+This chapter intends to offer a comprehensive insight into the 
+learning automata process, specifically discussing the roles and 
+responsibilities of the Teacher and Learner in \autoref{section:teacher_learning}. 
+In \autoref{section:learner_learning}, 
+we will introduce multiple active algorithms that we will use for our experiment.
 \section{The oracles}\label{section:teacher_learning}
 In this learning scenario, the $\textit{Teacher}$ is proficient in the language being taught 
 and is responsible for answering any questions posed by the learner. The $\textit{Learner}$ 
@@ -41,6 +42,10 @@ On equivalent oracle, the $\textit{Teacher}$ can return a positive counterexampl
 A positive counterexample is a missing word in the conjecture but present in the target.
 The negative one is defined symmetic.
 
+Active learning faces the challenge that the runtime of a learning algorithm is 
+influenced by the quality of counterexamples. 
+If a teacher provides an unnecessarily long counterexample, 
+the learner has no option but to process the entire word to make progress.
 It is crucial for the $\textit{Teacher}$ to have a clear and specific understanding of the 
 correct hypothesis.
 Since we know how to implement the $\textit{Teacher}$ to answer the oracles, it is now simple 

@@ -2,8 +2,15 @@
 
 \section{Case studies}
 \paragraph{Dijkstra’s algorithm for mutual exclusion}
+In this algorithm, we have a group of agents who are competing for access to a critical section.
+The algorithm uses a global pointer to ensure mutual exclusion and a guarantee of progress. 
+We are only checking for two things: the mutual exclusion property and whether the protocol can deadlock.
 \paragraph{Dijkstra’s algorithm for mutual exclusion with a token}
+The example illustrates a mutual exclusion algorithm for agents forming a ring. 
+They pass around a single token as a semaphore for a critical region.
 \paragraph{Other mutual exclusion algorithms}
+Additionally, we also consider the mutual exclusion algorithms of Burns
+, Szymanski and the standard bakery algorithm.
 \paragraph{Dining philosophers}
 \paragraph{Cache coherence protocols}
 \paragraph{Termination detection}

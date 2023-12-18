@@ -3,21 +3,24 @@
 In the \textit{Regular Model Checking} framework, program configurations are 
 represented as finite words over a pre-determined alphabet $\Sigma$.
 The system comprises a series of starting configurations and the transitions
-are modelled as finite state transducers
+are modelled as the relations
 mapping configuations to configuations.
 In \autoref{section:rts}, we introduce \textit{Regular transition system} (RTS)
 —an important framework for infinite state model-checking
 —to represent the behavior of a system.
+\autoref{section:inductive_statements} will explain how to encode a inductive statement.
+In addition, we will be presenting the three interpretations that we have utilized in this thesis.
 
 \section{Regular transition system}\label{section:rts}
 Essentially, a \textit{regular transition system} represents a parameterized system $\mathcal{S}$.
-For example, $\mathcal{S}$ is the system of \textit{token passing algorithm} with n is the number
+For example, a \textit{token-passing} system $\mathcal{S}$ with n is the number
 of agents. We call $\Sigma$ is the set of alphabets of the system, which indicates the finite states of
-each agent. The sequentially alphabets of length n represents the current state of the system.
-In other words, one can understand that the first letter indicates the state of the first agent, 
-and the second letter indicates the state of the second agent and so on.
-The states of each agent can be changed by following the rules of the system,
-which called the relations. Formally, we call that a \textit{transducer} and define these relations in form of an NFA as follow:
+each agent. 
+A sequence of alphabets represents the system's state at a specific point with a length of n.
+In other words, one can understand that the first letter indicates the state $u_1 \in \Sigma$ of the first agent, 
+the second letter indicates the state $u_2 \in \Sigma$ of the second agent, and so on.
+The states of each agent can be changed by following the system's rules,
+called the relations. Formally, we call that a \textit{transducer} and define these relations in the form of an NFA as follows:
 \begin{theo}[Transducer]{definition:transducer}
     \textit{
         A $\Sigma$-$\Gamma$-\textit{transducer} $\mathcal{T}$ is an \textit{NFA} 
@@ -28,7 +31,7 @@ which called the relations. Formally, we call that a \textit{transducer} and def
           \,\,|\,\, \langle u_1, v_1 \rangle \dots \langle u_n, v_n \rangle \in \mathcal{L}(\mathcal{T}) \rbrace 
         \end{equation*}
         Note that this relationship is only applicable to words that have the same length.
-        Extend this notation, we call
+        Extend this notation, we define
         \begin{align*} 
             For \,\, v \in \Sigma^*: target_{\mathcal{T}}(v) = \lbrace u \in \Gamma^*\,\, | \,\, \langle v,u \rangle \in [[\mathcal{T}]] \rbrace 
         \end{align*}
@@ -48,15 +51,17 @@ which called the relations. Formally, we call that a \textit{transducer} and def
 \end{lem}
 
 \paragraph*{}
-Intuitively, the Automaton \ref{lem:transducer} shows that the token will be passed from the left agent to the right agent, and once it 
-reaches the end of the agents, no more transitions can be applied to the 
-configuration. For example, from the configuration n n t n can be changed to n n n t,
-but n n n t can not be changed to any configurations.
+Automaton \ref{lem:transducer} indicates that the token will be transferred from the left agent to the right agent. 
+Once the token reaches the end of the agents, no further transitions can be made to the configuration.
 We capture the transitions of the \textit{token passing} system via the language 
 $[n,n]^*[t,n][n,t][n,n]^*$.
+Consider the following scenario: "n n t n" represents a system with four agents, 
+where the third agent currently holds the token. In the next step, 
+only the third agent can transfer the token to the agent on the right. 
+This can be represented as "n n n t". The system terminates once the last agent 
+holds the token.
 
-The initial configuations are actually the start states of some parameterized system.
-The system start with these initial states and can change it by follwing the transducer.
+The system begins with initial configurations, which can be modified depending on the transducer of parameterized systems.
 \begin{theo}[Regular transition system (RTS)]{definition:rts}
     \textit{
     An RTS is a triple $\mathcal{R} = \langle \Sigma, \mathcal{I}, \mathcal{T} \rangle$ where $\Sigma$
@@ -71,8 +76,8 @@ Moreover, let $\rightsquigarrow_\mathcal{T}^{*}$ denote the reflexive
 transitive closure of $\rightsquigarrow_\mathcal{T}$.
 We consider $w \in \Sigma^*$ \textit{reachable} on $\mathcal{R}$
 if there exist $u \in \mathcal{L}(\mathcal{I})$ with $u \rightsquigarrow_\mathcal{T}^{*} v$.
-Let \textit{reach}$(\mathcal{R}) \subseteq \Sigma^*$ denote all
-reachable configuations.
+Let \textit{reach}$(\mathcal{R}) \subseteq \Sigma^*$ denotes all
+reachable configurations.
 \begin{lem}[NFA $\mathcal{I}$ for Token passing]{lem:bezout}
     \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
         \node[state,initial] (q_0)   {$q_0$}; 
@@ -84,24 +89,25 @@ reachable configuations.
 \end{lem}
 
 \paragraph*{}
-The set of initial configuations for \textit{token passing} system is the language of NFA $\mathcal{I}$ or $\mathcal{L}(\mathcal{I})=tn^*$.
-In other words, the first agent  alway holds the toke while the following agents do not.
+$\mathcal{L}(\mathcal{I})$ defines the set of initial configurations for the \textit{token passing} 
+as tn*.
+In other words, the first agent always holds the token, while the following agents do not.
 
 \section{Inductive statements}\label{section:inductive_statements}
 \paragraph*{Reachability problem}
-The \textit{RTS} $\mathcal{R}$ and the automaton $\mathcal{B}$ for the regular language that denotes the undesired configurations has been furnished now.
-The question is whether one can reach any undesired 
-configuration in this transition system.
+Besides the \textit{RTS} $\mathcal{R}$ and the automaton $\mathcal{B}$ for the regular language that denotes the undesired configurations has been provided.
+The question at hand is whether it is possible to achieve any undesired configuration in this particular transition system.
 Formally, we have to compute
 if \textit{reach}($\mathcal{R}$)
 $\bigcap$ $\mathcal{L}(\mathcal{B}) = \emptyset?$
-For the reason that this reachability problem is undecidable
-in general we need a new approach that proves that
-no undesired configuation can be reached. 
-We consider the question: "Is there a pair of configurations, v and u, such that u satisfies all the inductive statements satisfied by v?".
-Inductively, if u is reachable from v, then u will satisfied the inductive statements that v satisfied.
-By using inductive statements, it is possible to check whether an undesired configuration can be reached from an initial configuration.
-If there is an inductive statement satisfied by v but not u, then u cannot be reached from v.
+Because the reachability problem is undecidable, a new approach is needed to 
+ensure no undesired configurations are reached.
+We are exploring whether there exists a pair of configurations, $v$ and $u$, 
+where $u$ satisfies all the inductive statements that $v$ satisfies. If $u$ is 
+reachable from $v$, then it will satisfy all the same inductive statements that $v$ did. 
+This method can be used to determine whether an undesired configuration can be reached 
+from an initial configuration. 
+If there is an inductive statement that $v$ satisfies, but $u$ does not, then it is not possible to reach $u$ from $v$.
 
 \paragraph*{Encoded statements}
 We shall now proceed to examine the process of how the statements are encoded.
@@ -111,19 +117,21 @@ $\sigma_2$ or \dots or agent $i_k$ is in state $\sigma_k$".
 In general, the nesccessary information of any statement can be encoded
 as a function $f: \lbrace 1, \dots, m\rbrace \rightarrow 2^{\Sigma}$, 
 while the set of letters $f(i) \subseteq \Sigma$ corresponds to the states the i-th 
-agent. In other words, each agent can be  required by any states or not ($\emptyset$).
-For example, a similar statement could be "in all configurations of length 3 the first
-agent is in state p or the first agent is in state q". Using the above
-method, the example statement would be encoded as a function
+agent. In other words, each agent can be  required by any states or not.
+Consider the following statement: "In all configurations of length 3, 
+the first agent is in state p or the first agent is in state q." 
+Using a certain method, this statement can be encoded as a function 
 $\lbrace 1 \mapsto \lbrace p,q \rbrace, 2 \mapsto \emptyset, 3 \mapsto \emptyset \rbrace$.
-We can simply this function to words $\lbrace p,q \rbrace$  $\,\emptyset$ $\,\emptyset$.
+By simplifying this function to $\lbrace p,q \rbrace$  $\,\emptyset$ $\,\emptyset$, we can express the statement in words.
 
 Without context, these words have no meaning or information.
 Therefore, we use \textit{interpretation} to understand the statements that we encode.
 For example, how can we answer the question: "Does the words p q q satisfied the statement $\lbrace p,q \rbrace$  $\,\emptyset$ $\,\emptyset$?".
-One we can check whether
-$p \in \lbrace p,q \rbrace$, or $q \in \emptyset$.
-It depends on which interpretation do we use.
+Depending on the interpretation we use, we can check different conditions. 
+With the "trap" interpretation, we can verify if 
+$p \in \lbrace p,q \rbrace$, or $q \in \emptyset$, or $q \in \emptyset$.
+With the "siphon" interpretation, we can check if
+$p \notin \lbrace p,q \rbrace$, and $q \notin \emptyset$, and $q \notin \emptyset$.
 
 \begin{theo}[Interpretation]{definition:interpretation}
     \textit{
@@ -135,8 +143,8 @@ It depends on which interpretation do we use.
 \end{theo}
 
 \paragraph*{Concrete interpretations}
-In this thesis, we will present three interpretations, and we will delve deeper into each 
-of them for a better understanding.
+In this thesis, we will explore three interpretations: \textit{trap}, \textit{siphon}, \textit{flow}, 
+and will delve deeper into each of them for a better understanding.
 
 \paragraph*{Traps} 
 Let fix the size of the instance as $n$. We define any configuration 
@@ -240,11 +248,11 @@ are
     \lbrace n \rbrace \,\,\,\, \emptyset \,\,\,\, \emptyset \,\,\,\, \lbrace n \rbrace
 \]
 
-It concludes that \textit{n n n t} can be reached from \textit{t n n n} because
-all statements are satisfied by \textit{t n n n} and also \textit{n n n t} as well.
-But \textit{t t n n} can not be reached from \textit{t n n n} because 
-$\lbrace n \rbrace$ $\lbrace n \rbrace$  $\emptyset$  $\emptyset$
-is not satisfied by \textit{t t n n}.
+It concludes that "\textit{n n n t}" can be reached from "\textit{t n n n}" because
+all statements are satisfied by "\textit{t n n n}" and also "\textit{n n n t}" as well.
+But "\textit{t t n n}" can not be reached from "\textit{t n n n}" because 
+"$\lbrace n \rbrace$ $\lbrace n \rbrace$  $\emptyset$  $\emptyset$"
+is not satisfied by "\textit{t t n n}".
 
 By this way, we can guarantee that no bad configuations can be reached
 by checking both origin and the target configuations satisfied all
