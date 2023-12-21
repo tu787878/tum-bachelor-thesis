@@ -1,0 +1,13 @@
+ Name,Property,Interpretations,Algorithms,Result,Time,Language Size
+ Berkeley,exclusiveexclusive,Trap,Lstar,x,2.472ms,-
+ ,,,NLstar,x,2.547ms,-
+ ,,,KV,x,2.77ms,-
+ ,,,RS,x,2.254ms,-
+ ,,Siphon,Lstar,x,1.829ms,-
+ ,,,NLstar,x,1.978ms,-
+ ,,,KV,x,1.67ms,-
+ ,,,RS,x,1.688ms,-
+ ,,Flow,Lstar,x,5.556ms,-
+ ,,,NLstar,x,5.435ms,-
+ ,,,KV,x,5.484ms,-
+ ,,,RS,x,5.428ms,-

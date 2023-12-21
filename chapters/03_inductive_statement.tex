@@ -14,9 +14,10 @@ In addition, we will be presenting the three interpretations that we have utiliz
 \section{Regular transition system}\label{section:rts}
 Essentially, a \textit{regular transition system} represents a parameterized system $\mathcal{S}$.
 For example, a \textit{token-passing} system $\mathcal{S}$ with n is the number
-of agents. We call $\Sigma$ is the set of alphabets of the system, which indicates the finite states of
-each agent. 
-A sequence of alphabets represents the system's state at a specific point with a length of n.
+of agents. We call $\Sigma$ is the set of alphabets of the system, which indicates the finite states of the agent. 
+For $\mathcal{S}$, $\Sigma = \{n, t\}$.
+The system begins with initial configurations, defined by a regular language.
+A sequence of alphabets represents the corresponding state of the agents.
 In other words, one can understand that the first letter indicates the state $u_1 \in \Sigma$ of the first agent, 
 the second letter indicates the state $u_2 \in \Sigma$ of the second agent, and so on.
 The states of each agent can be changed by following the system's rules,
@@ -58,10 +59,9 @@ $[n,n]^*[t,n][n,t][n,n]^*$.
 Consider the following scenario: "n n t n" represents a system with four agents, 
 where the third agent currently holds the token. In the next step, 
 only the third agent can transfer the token to the agent on the right. 
-This can be represented as "n n n t". The system terminates once the last agent 
+This can be represented as "n n n t". The system terminates since the last agent 
 holds the token.
 
-The system begins with initial configurations, which can be modified depending on the transducer of parameterized systems.
 \begin{theo}[Regular transition system (RTS)]{definition:rts}
     \textit{
     An RTS is a triple $\mathcal{R} = \langle \Sigma, \mathcal{I}, \mathcal{T} \rangle$ where $\Sigma$
@@ -94,8 +94,11 @@ as tn*.
 In other words, the first agent always holds the token, while the following agents do not.
 
 \section{Inductive statements}\label{section:inductive_statements}
-\paragraph*{Reachability problem}
-Besides the \textit{RTS} $\mathcal{R}$ and the automaton $\mathcal{B}$ for the regular language that denotes the undesired configurations has been provided.
+In general, we need to determine if a given RTS can produce any undesirable word,
+which is pre-defined in a reglar set.
+We call this a \textit{Reachability problem}.
+\subsection*{Reachability problem}
+Besides the \textit{RTS} $\mathcal{R}$, an automaton $\mathcal{B}$ for the regular language that denotes the undesired configurations has been provided.
 The question at hand is whether it is possible to achieve any undesired configuration in this particular transition system.
 Formally, we have to compute
 if \textit{reach}($\mathcal{R}$)
@@ -103,13 +106,13 @@ $\bigcap$ $\mathcal{L}(\mathcal{B}) = \emptyset?$
 Because the reachability problem is undecidable, a new approach is needed to 
 ensure no undesired configurations are reached.
 We are exploring whether there exists a pair of configurations, $v$ and $u$, 
-where $u$ satisfies all the inductive statements that $v$ satisfies. If $u$ is 
-reachable from $v$, then it will satisfy all the same inductive statements that $v$ did. 
+where $u$ satisfies all the inductive statements that $v$ satisfies. 
+Indeed, if $u$ is reachable from $v$, then it will satisfy all the same inductive statements that $v$ did since they are inductive.
 This method can be used to determine whether an undesired configuration can be reached 
 from an initial configuration. 
-If there is an inductive statement that $v$ satisfies, but $u$ does not, then it is not possible to reach $u$ from $v$.
+If there is (at least) an inductive statement that $v$ satisfies, but $u$ does not, then it is not possible to reach $u$ from $v$.
 
-\paragraph*{Encoded statements}
+\subsection*{Encoded statements}
 We shall now proceed to examine the process of how the statements are encoded.
 We consider the statement pattern "in all configuations of a certain length
 m either agent $i_1$ is in state $\sigma_1$ or agent $i_2$ is in state
@@ -127,11 +130,13 @@ By simplifying this function to $\lbrace p,q \rbrace$  $\,\emptyset$ $\,\emptyse
 Without context, these words have no meaning or information.
 Therefore, we use \textit{interpretation} to understand the statements that we encode.
 For example, how can we answer the question: "Does the words p q q satisfied the statement $\lbrace p,q \rbrace$  $\,\emptyset$ $\,\emptyset$?".
-Depending on the interpretation we use, we can check different conditions. 
-With the "trap" interpretation, we can verify if 
+The results can vary depending on the interpretation that we choose to use.
+With the the interpretation "trap", one verify if 
 $p \in \lbrace p,q \rbrace$, or $q \in \emptyset$, or $q \in \emptyset$.
-With the "siphon" interpretation, we can check if
+It is necessary that at least one word in the configuration has a value in the inductive statement.
+While the interpretation "siphon" check if
 $p \notin \lbrace p,q \rbrace$, and $q \notin \emptyset$, and $q \notin \emptyset$.
+In other words, it ensures that no configuration word has the same value as the statement.
 
 \begin{theo}[Interpretation]{definition:interpretation}
     \textit{
@@ -142,7 +147,7 @@ $p \notin \lbrace p,q \rbrace$, and $q \notin \emptyset$, and $q \notin \emptyse
      }
 \end{theo}
 
-\paragraph*{Concrete interpretations}
+\subsection*{Concrete interpretations}
 In this thesis, we will explore three interpretations: \textit{trap}, \textit{siphon}, \textit{flow}, 
 and will delve deeper into each of them for a better understanding.
 
@@ -153,8 +158,9 @@ For any statement $I_1 \dots I_n$ we define a set $\left\lgroup I \right\rgroup 
 The interpretation of a trap involves connecting a configuration u with a statement I if and only if
 $\left\lgroup u \right\rgroup \cap \left\lgroup I \right\rgroup \neq \emptyset$.
 Once a configuration has a value in the inductive statement, it can't remove all its values again - 
-it gets "trapped". Formally, $u \models_{\mathcal{V}_{Trap}} I$ if and only if $\left\lgroup u \right\rgroup \cap \left\lgroup I \right\rgroup \neq \emptyset$.
-
+it gets "trapped". Formally, $u \models_{\mathcal{V}_{Trap}} I$ if and only if $\left\lgroup u \right\rgroup \bigcap \left\lgroup I \right\rgroup \neq \emptyset$.
+For example, given the configuration $u = $ "n n n t", $v = $ "t n n n" and the statement $I =$ $\{n\} \,\, \emptyset \,\, \emptyset \,\, \emptyset$,
+one can conclude that $u \models_{\mathcal{V}_{trap}} I$ and $v \not\models_{\mathcal{V}_{trap}} I$.
 \begin{lem}[DFA for trap intepretation]{lem:trap}
     \textit{We denote with H all pairs in $\langle \sigma, I \rangle \in \Sigma \times 2^{\Sigma}$
     such that  $\sigma \in I$ and M all pairs in $\langle \sigma, I \rangle \in \Sigma \times 2^{\Sigma}$
@@ -171,12 +177,11 @@ it gets "trapped". Formally, $u \models_{\mathcal{V}_{Trap}} I$ if and only if $
 \end{lem}
 
 \paragraph*{Siphon}
-Opposite to \textit{trap}, \textit{siphon} interpretation, 
-a siphon I requires that none of its values is part of the configuration
-that satisfies I. 
-Other words, $u \models_{\mathcal{V}_{siphon}} I$ if and only if  $\left\lgroup u \right\rgroup \cap \left\lgroup I \right\rgroup = \emptyset$
+According to the siphon interpretation, none of the values can be part of the configuration that satisfies I, as opposed to the trap interpretation.
+Formally, $u \models_{\mathcal{V}_{siphon}} I$ if and only if  $\left\lgroup u \right\rgroup \bigcap \left\lgroup I \right\rgroup = \emptyset$.
+
 \begin{lem}[DFA for siphon intepretation]{lem:siphon}
-    \textit{We denote with H all pairs in $\langle \sigma, I \rangle \in \Sigma \times 2^{\Sigma}$
+    \textit{Again, we denote with H all pairs in $\langle \sigma, I \rangle \in \Sigma \times 2^{\Sigma}$
     such that  $\sigma \in I$ and M all pairs in $\langle \sigma, I \rangle \in \Sigma \times 2^{\Sigma}$
     such that  $\sigma \notin I$.}
 
@@ -191,12 +196,14 @@ Other words, $u \models_{\mathcal{V}_{siphon}} I$ if and only if  $\left\lgroup 
 \end{lem}
 
 \paragraph*{Flow}
-The third and last interpretation we are interested in is the flow interpretation $\mathcal{V_{flow}}$ .
-This time, we want that exactly at one position the letter of the configuration is part of
-the set in the same position in the encoded statement.
-Formally, $u \models_{\mathcal{V}_{siphon}} I$ if and only if  $|\left\lgroup u \right\rgroup \cap \left\lgroup I \right\rgroup| = 1$
+The third and final interpretation we are interested in is called the flow interpretation $\mathcal{V}_{flow}$.
+This interpretation requires that the letter of the configuration is included in the set in the same position in the encoded statement. 
+It is important to note that this should occur at only one position.
+Formally, $u \models_{\mathcal{V}_{siphon}} I$ if and only if  $\left|\left\lgroup u \right\rgroup \bigcap \left\lgroup I \right\rgroup\right| = 1$.
+For instance, given the configuration $u = $ "n n n t", $v = $ "t t t t" and the statement $I =$ $\{t\} \,\, \{t\} \,\, \{t\} \,\, \{n, t\}$,
+one can conclude that $u \models_{\mathcal{V}_{flow}} I$ and $v \not\models_{\mathcal{V}_{flow}} I$.
 \begin{lem}[DFA for flow intepretation]{lem:flow}
-    \textit{We denote with H all pairs in $\langle \sigma, I \rangle \in \Sigma \times 2^{\Sigma}$
+    \textit{We also denote with H all pairs in $\langle \sigma, I \rangle \in \Sigma \times 2^{\Sigma}$
     such that  $\sigma \in I$ and M all pairs in $\langle \sigma, I \rangle \in \Sigma \times 2^{\Sigma}$
     such that  $\sigma \notin I$.}
 
@@ -225,38 +232,52 @@ Formally, $u \models_{\mathcal{V}_{siphon}} I$ if and only if  $|\left\lgroup u 
             \, then \, v \models I \rbrace\]
     }
 \end{theo}
-
-*Note that, for any RTS $\mathcal{R} = \langle \Sigma, \mathcal{I}, \mathcal{T} \rangle$
+For any RTS $\mathcal{R} = \langle \Sigma, \mathcal{I}, \mathcal{T} \rangle$
 and any interpretation $\mathcal{V}$, any inductive
 statement $I \in Inductive_{\mathcal{V}}(\mathcal{R})$
 that is satisfied in one configuration w ($w \models I \rbrace$) is also satisfied
 in all configurations that can be reached from w ($u \models I$ for all $w \rightsquigarrow_\mathcal{T}^{*} u$).
-*
 
-Recall the example of \textit{Token passing} system,
-we argue that $\emptyset^*$ $\lbrace n \rbrace$ $\emptyset^*$ $\lbrace n \rbrace$ $\emptyset^*$
-$\subseteq Inductive_{\mathcal{V}}(\mathcal{R})$. For the fixed
-length of configuration n = 4, all possible inductive statements
-are 
-\[
-    \lbrace n \rbrace\,\,\,\, \lbrace n \rbrace \,\,\,\,  \emptyset \,\,\,\, \emptyset
-\]
-\[
-    \lbrace n \rbrace\,\,\,\, \emptyset \,\,\,\, \lbrace n \rbrace \,\,\,\,  \emptyset
-\]
-\[
-    \lbrace n \rbrace \,\,\,\, \emptyset \,\,\,\, \emptyset \,\,\,\, \lbrace n \rbrace
-\]
+Let's consider the Token passing system example. 
+The token passing algorithm can have a bad property known as "manytoken" (Automaton \ref{lem:manytoken}). 
+This property refers to all the configurations where more than one agent holds the token simultaneously. 
+In other words, if there are multiple tokens circulating at the same time, it is considered a "manytoken" situation.
 
-It concludes that "\textit{n n n t}" can be reached from "\textit{t n n n}" because
-all statements are satisfied by "\textit{t n n n}" and also "\textit{n n n t}" as well.
-But "\textit{t t n n}" can not be reached from "\textit{t n n n}" because 
-"$\lbrace n \rbrace$ $\lbrace n \rbrace$  $\emptyset$  $\emptyset$"
-is not satisfied by "\textit{t t n n}".
+\begin{lem}[DFA $\mathcal{B}$ for "manytoken"]{lem:manytoken}
+    \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+        \node[state,initial] (q_0)   {$q_0$}; 
+        \node[state] (q_1) [right=of q_0] {$q_1$}; 
+        \node[state, accepting] (q_2) [right=of q_1] {$q_2$}; 
+         \path[->] 
+         (q_0) edge  node {t} (q_1)
+               edge [loop above] node {n} ()
+         (q_1) edge [loop above] node {n} ()
+         (q_1) edge  node {t} (q_2)
+         (q_2) edge [loop above] node {n,t} ();
+     \end{tikzpicture}
+\end{lem}
+
+Using the given token-passing system $\mathcal{R}$, a DFA $\mathcal{B}$ and $\mathcal{V}_{trap}$ interpretation, dodo-cpp can learn a 
+regular set of inductive interpretations 
+\[
+    \{n\} \,\, \{n\} \,\, \{n\}^* \,\, (\{t\} \,\, \{n\} \,\, \{n\}^* \,\, | \,\, \{t\}) \subseteq Inductive_{\mathcal{V}_{trap}}(\mathcal{R})    
+\] 
+For the fixed length of configuration n = 4, all posible inductive statements are
+\begin{gather*}
+    \lbrace n \rbrace\,\,\,\, \lbrace n \rbrace \,\,\,\,  \lbrace n \rbrace \,\,\,\, \lbrace n \rbrace,\\
+    \lbrace n \rbrace\,\,\,\, \lbrace n \rbrace \,\,\,\,  \lbrace n \rbrace \,\,\,\, \lbrace t \rbrace,\\
+    \lbrace n \rbrace\,\,\,\, \lbrace n \rbrace \,\,\,\,  \lbrace t \rbrace \,\,\,\, \lbrace n \rbrace
+\end{gather*}
+It concludes that $v = $ "\textit{t t t n}" $\in \mathcal{L}(\mathcal{B})$ can not reached from the initial congfiguration
+$u = $ "\textit{t n n n}" $\in \mathcal{L}(\mathcal{I})$ because $u$ satifies the statement
+$I = \lbrace n \rbrace\,\,\,\, \lbrace n \rbrace \,\,\,\,  \lbrace n \rbrace \,\,\,\, \lbrace t \rbrace$,
+but $v$ does not.
 
 By this way, we can guarantee that no bad configuations can be reached
 by checking both origin and the target configuations satisfied all
 the inductive statements.
+
+Now we will use inductive statements to establish a potential reachability relationship between two configurations.
 
 \begin{theo}[Potential reachability]{definition:potential_reachability}
     \textit{
@@ -267,15 +288,28 @@ the inductive statements.
    }
 \end{theo}
 
-We will this definition for later for implemetation. 
-
 \begin{lemma}\label{lemma:abstractly_reachable}
-    \cite{latex}
+    
 \end{lemma}
 \textit{
     Let $\mathcal{R} = (\Sigma, I, T)$ be an RTS, $\langle \Gamma, \mathcal{V} \rangle$ an interpretation, 
     and S a NFA over the alphabet $\Gamma$. Then there exists a  $\Sigma-\Sigma-transducer$ C such that
 }
-\begin{equation*}
+\begin{equation}
     [[C]] = \left\lbrace \langle u,v\rangle \in \bigcup_{n \geq 0} \Sigma^n \times \Sigma^n \, | \, \forall I \in \mathcal{L}(S) \, . \, if \, u \, \models_{\mathcal{V}} \, I \, then \, v \models_{\mathcal{V}} I \right\rbrace
-\end{equation*}
+\end{equation}
+
+Because regular languages are closed under complement, we can define $\overline{C}$ as followings:
+\begin{lemma}\label{lemma:abstractly_reachable2}
+    
+\end{lemma}
+\textit{
+    Let $\mathcal{R} = (\Sigma, I, T)$ be an RTS, $\langle \Gamma, \mathcal{V} \rangle$ an interpretation, 
+    and S a NFA over the alphabet $\Gamma$. Then there exists a  $\Sigma-\Sigma-transducer$ $\overline{C}$ such that
+}
+\begin{equation}
+    [[\overline{C}]] = \left\lbrace \langle u,v\rangle \in \bigcup_{n \geq 0} \Sigma^n \times \Sigma^n \, | \, \exists I \in \mathcal{L}(S) \, . \, if \, u \, \models_{\mathcal{V}} \, I \, then \, v \not\models_{\mathcal{V}} I \right\rbrace
+\end{equation}
+
+Note that, these Lemmas have been proved in the previous work \cite*{Welzel2023InductiveSts}.
+We will utilize them later for constructing the equivalent oracle in the implementation \autoref{chapter:implementation}.

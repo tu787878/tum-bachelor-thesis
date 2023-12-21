@@ -157,8 +157,8 @@ by adding t and its prefixes to S and repeats the process by going to line 1.
 \subsection{NL*}
 In general, a nondeterministic finite automata \textit{NFA} is often preferable to a 
 deterministic finite automata \textit{DFA} due to potentially exponential 
-differences in their sizes (REFERENCE FOR COMPARISON OF NFA AND DFA).
-Therefore, learning algorithms for nondeterministic finite automata (NFA) are required.
+differences in their sizes \cite*{ozols2005size}.
+Therefore, learning algorithms for nondeterministic finite automata are required.
 In this section, we will introduce another active learning algorithm called the \textit{NL*} algorithm \cite*{Bollig2009AngluinStyleLO},
 based on \textit{L*}. The \textit{NL*} concludes a residual finite-state automata (RFSA), 
 a subclass of nondeterministic finite automata was introduced in the seminar work \cite*{10.1007/3-540-44693-1_13}.
@@ -172,7 +172,7 @@ and \textit{RFSA-consitency}\footnoteref{notenl} properties, once the both prope
 it can contruct the conjecture and ask the equivalent query to the teacher.
 
 \subsection{Kearns-Vazirani}
-Another active learning algortihm is introduced in this thesis is \textit{Kearns and Vazirani's} \cite*{kearns1994introduction}.
+Another active learning algortihm is introduced in this thesis is \textit{Kearns and Vazirani's} algorithm \cite*{kearns1994introduction}.
 Unlike \textit{Angluin's algorithm} it organizes its data in an ordered binary tree. 
 It aims to minimize the number of membership queries by storing only one representative for 
 each L-equivalence class in the tree.
@@ -197,25 +197,21 @@ Where the set of states $Q = R$. The final states F consist of all representativ
 that are located in the right subtree of the root node. 
 Since $\epsilon$ is always an element of R, the initial state $q_0 = \epsilon$.
 \subsection{Rivest-Schapire}
-The last algorithm we will introduce in this thesis is \textit{Rivest and Schapire}.
+The last algorithm we will introduce in this thesis is \textit{Rivest and Schapire} \cite*{rivest1989inference}.
 The different of this algortihm to \textit{Angluin's algorithm} is,
 that uses a \textit{reduced} version of Angluin's observation table
 that stores exactly one representative per L-equivalence class.
 The advantages are storing less data and asking less memberships queries.
 (In fact, this method has originally been introduced by Schapire). 
 \section{Libalf: the Automata Learning Framework}\label{section:libalf}
-*\textit{Libalf} is a comprehensive, open-source program library
-for learning finite automata. It was used for a large share of the
-experiments conducted in this thesis, and many of the 
-algorithms used or developed in later chapters habe between
-integrated into the library.*
+Libalf \cite*{bollig2010libalf} is an open-source program library that facilitates the learning of finite automata. 
+It has been extensively used in the experiments conducted in this thesis. 
+Many of the algorithms that were used or developed in later chapters have been integrated into the library.
 It supports both for active and passive algorithms but 
 in this thesis we only consider the active algorithms.
-The basis libraries that are required for libalf are libAmore and
-libAmore++ that support for representing the automaton
-such that NFA and DFA.
 
 Internlly, \textit{libalf} represents words as list symbols
 where each symbol is an integer data type. Thus, the maximal size
 of an alphabet is $2^{32}$ or $2^{64}$ depending on the architecture of the 
 target machine.
+The libalf library requires the libAmore++ basis library to support the NFA and DFA automaton representation.

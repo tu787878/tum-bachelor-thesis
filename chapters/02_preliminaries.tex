@@ -2,9 +2,13 @@
 % basic
 In this chapter, we introduce some basic notions and definitioms that we use throughout this thesis.
 
+\section*{Words and Languages}
+An \textit{alphabet} $\Sigma$ is a finite set of symbols.
+A \textit{word} $u = a_1 \dots a_n$ is a finite sequence of symbols $a_i \in \Sigma$ for $i \in \lbrace 1, \dots, n\rbrace$. 
+$\Sigma^*$ denotes the set of all words over an alphaber $\Sigma$.
+\textit{Regular languages} are those which can be identified by a finite state automaton \cite*{enwiki:1190424473}.
 
-\subsection*{Finite automata}
-\paragraph*{}
+\section*{Finite automata}
 We classify automata into two categories: deterministic and non-deterministic, 
 in order to identify regular languages consisting of finite words.
 \begin{theo}[Deterministic finite automaton (DFA)]{definition:dfa}
@@ -36,7 +40,7 @@ in order to identify regular languages consisting of finite words.
         }
 \end{theo}
 
-\subsection*{Token passing algorithm}\label{example:token-passing}
+\section*{Token passing algorithm}\label{example:token-passing}
 We will provide a simple example to demonstrate how systems are 
 modelled in \textit{regular transition system}.
 The \textit{token passing} system comprises a linear array of agents where the 
@@ -45,12 +49,12 @@ the token to its right neighbour. We choose to represent the agent that holds
 the token as the letter t and the agents that do not hold the token
 as the letter n.
 
-Let us examine how this algorithm is applied in a real-world scenario. 
-Imagine a conveyor belt buffet restaurant where a plate of thinly sliced beef 
-starts at the first table and moves to the next table every 5 seconds. 
-This process continues until the plate reaches the last table, where it stops. 
-In this case, the token represents the plate of beef and the tables are the agents.
-We want to avoid any potential problems that may arise. 
-For instance, if there are no plates on the conveyor, customers may become 
-frustrated. On the other hand, if there are too many plates of beef on the 
-conveyor at once, the boss may worry about revenue.
+% Let us examine how this algorithm is applied in a real-world scenario. 
+% Imagine a conveyor belt buffet restaurant where a big plate of thinly sliced beef 
+% starts at the first table and moves to the next table every 5 seconds. 
+% This process continues until the plate reaches the last table, where it stops. 
+% In this case, the token represents the plate of beef and the tables are the agents.
+% We want to avoid any potential problems that may arise. 
+% For instance, if there are no plates on the conveyor, customers may become 
+% frustrated. On the other hand, if there are too many plates of beef on the 
+% conveyor at once, the boss may worry about revenue.

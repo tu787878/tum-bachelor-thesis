@@ -107,14 +107,10 @@ Otherwise we obtain a counterexample
 $\langle u_1 \dots u_n, \, v_1 \dots v_n \rangle \in \mathcal{L}(\mathcal{D})$.
 Intuitively, we can see that $\mathcal{D}$ is the intersection of
 the automaton $[[C]]$ (Lemma \ref{lemma:abstractly_reachable}) and $\mathcal{I} \circ  \mathcal{B}$.
-Because regular languages are closed under complement, $[[\overline{C}]]$ is defined with:
-\begin{equation}
-    [[\overline{C}]] = \left\lbrace \langle u,v\rangle \in \bigcup_{n \geq 0} \Sigma^n \times \Sigma^n \, | \, \exists I \in \mathcal{L}(S) \, . \, if \, u \, \models_{\mathcal{V}} \, I \, then \, v \not\models_{\mathcal{V}} I \right\rbrace
-\end{equation}
-Since computing $[[\overline{C}]]$ is effectively, we will construct the automaton for $[[\overline{C}]]$ and complement it.
+Since computing $[[\overline{C}]]$ (Lemma \ref{lemma:abstractly_reachable2}) is effectively, we will construct the automaton for $[[\overline{C}]]$ and complement it.
 Let $S =  \langle P, \Gamma, \Delta, p_0, E \rangle$ 
 is a transducer and  $\mathcal{V} =  \langle Q, \Sigma \times \Gamma, \delta, q_0, F \rangle$ is 
-an interpretation. The automaton of $\overline{[[C]]}$ 
+an interpretation. The automaton of $[[\overline{C}]]$ 
 is defined by $\langle Q \times P \times Q, \Sigma \times \Sigma, \triangle, \langle q_o,  p_0, q_o \rangle, 
 E \times F \times (Q \setminus F) \rangle$ where
 \begin{equation*}
@@ -136,7 +132,7 @@ We can also call I an active counterexample since I is in the target language bu
 the candicate language. 
 It gives rise to the question whether $I \in Inductive_{\mathcal{V}}(\mathcal{R})$ exists such that $u_1 \dots u_n \models_v I$
 and $v_1 \dots v_n \not\models I$.
-It was previously proven by \cite{latex} that this problem is in NP.
+It was previously proven by \cite{Welzel2023InductiveSts} that this problem is in NP.
 Moreover, since SAT problem is NP-hard, it can be reduced to SAT.
 
 \paragraph*{Flow interpretation}
@@ -164,20 +160,20 @@ and
 \begin{equation}\label{qu:notExactlyOne}
     \lnot ExactlyOne(\bigcup_{1 \leq i \leq n} \{ \langle v_i, i \rangle \})
 \end{equation}
-The clause \ref{qu:exactlyOne} guarantee that there is exactly one
+Clause \ref{qu:exactlyOne} ensures that there is exactly one
 $1 \leq i \leq n$ such that $x_i \in I_i$. 
-The clause \ref{qu:notExactlyOne} guarantee that either there is no 
+On the other hand, clause \ref{qu:notExactlyOne} guarantees that either there is no 
 or more than one $1 \leq i \leq n$ such that $x_i \in I_i$.
 Semantically, we define a state $\langle l,q,k \rangle \in \{0,1\} \times Q_{\mathcal{T}} \times \{0,1,2\}$ 
 corresponds to the observation that one
 can reach the state q of $\mathcal{T}$ with a word $[\substack{u_1 \\ v_1}] \dots [\substack{u_n \\ v_n}]$
 such that there are k many indices i where $x_i \in I_i$, on the other hand,
 there are l many indices j where $y_j \in I_j$.
-We need to ensure that each pair $[x,y]$we consider is accepted by the transduce \textit{transducer} $\mathcal{T}$.
+We need to ensure that each pair $[x,y]$ we consider is accepted by the \textit{transducer} $\mathcal{T}$.
 Additionally, in the final step should not result in the same configuration for both the source and target. 
 To achieve this, we encode the state product as literals and define the proposition formula as follows:
 
-\begin{multline}
+\begin{multline}\label{qu:states}
     \bigvee_{q_0 \in Q_0^{\mathcal{T}}} \langle \langle 0, q_0, 0 \rangle , 0 \rangle \wedge \lnot \bigvee_{f \in F_{\mathcal{T}}} \langle \langle 1,f,0 \rangle,n \rangle \vee \langle \langle 1,f,2\rangle,n \rangle\\
     \wedge \bigwedge_{1 \leq i \leq n, \,\, \left\langle q, \left[\substack{x \\ y}\right],p \right\rangle \in \Delta_{\mathcal{T}}}
     \begin{pmatrix}
@@ -203,7 +199,7 @@ To achieve this, we encode the state product as literals and define the proposit
 \end{multline}
 
 To solve the (CNF-)SAT problem we need to convert the entire of 
-logical formular in the CNF form, 
+logical formular \ref*{qu:exactlyOne}, \ref*{qu:notExactlyOne} and \ref*{qu:states} in the CNF form, 
 which can be achieved by applying DeMorgan's laws \cite{enwiki:1184283195}.
 
 
@@ -234,17 +230,17 @@ which can be achieved by applying DeMorgan's laws \cite{enwiki:1184283195}.
 
 
 \paragraph{A polynomial time algorithm for the word problem for $\mathcal{V}_{trap}$ and $\mathcal{V}_{siphon}$}
-Again, we focus on $\mathcal{V}_{trap}$ since the arguments for $\mathcal{V}_{siphon}$ are analogous.
+We focus on $\mathcal{V}_{trap}$ since the arguments for $\mathcal{V}_{siphon}$ are analogous.
 Pseudocode \ref{algorihtm:disprove} demonstrates how to find the separating 
 statement for trap interpretation within polynomial time.
 We begin with the statment $I = \Sigma \backslash \{y_1\} \dots \Sigma \backslash \{y_n\}$.
 If a transition $\left[\substack{x_1 \\ y_1}\right] \dots \left[\substack{x_n \\ y_n}\right]$ exists such that 
 $x_1 \dots x_n$ satisfies the current statement and $y_1 \dots y_n$ does not,
 then remove $x_i$ from the i-th letter of the statement for all $1 \leq i \leq n$.
-To prove that this approach can be computed in polynomial time, refers to \cite{latex}.
+To prove that this approach can be computed in polynomial time, refers to \cite{Welzel2023InductiveSts}.
 
 \begin{algorithm}
-    \caption{Disprove}\label{algorihtm:disprove}
+    \caption{Disprove (polymial time algorithm for trap)}\label{algorihtm:disprove}
     \textbf{Input: } $\left[\substack{x_1 \\ y_1}\right] \dots \left[\substack{x_n \\ y_n}\right]$ and transducer $\mathcal{T}$
 
     \textbf{Output: } Inductive statement I
@@ -267,7 +263,9 @@ To prove that this approach can be computed in polynomial time, refers to \cite{
     \end{algorithmic}
     end
 \end{algorithm}
-The language we are learning has a much exponentially larger alphabet than the RTS. 
+\paragraph{}
+The language we are learning can have a much exponentially larger alphabet than the RTS. 
 However, \textit{Libalf} - the software we are using - allows us to start the learning process with a smaller alphabet, 
 which we can expand later if we need to. 
 So, we begin with an empty alphabet and gradually add letters from $2^\Sigma$.
+

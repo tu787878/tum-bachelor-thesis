@@ -19,7 +19,7 @@
 \newcommand*{\getAuthor}{Van Tu Nguyen}
 \newcommand*{\getDoctype}{Bachelor's Thesis}
 \newcommand*{\getSupervisor}{Prof. Dr. Dr. h. c. Javier Esparza}
-\newcommand*{\getAdvisor}{Dr. Christoph Welzel-Mohr}
+\newcommand*{\getAdvisor}{Christoph Welzel-Mohr}
 \newcommand*{\getSubmissionDate}{Submission date}
 \newcommand*{\getSubmissionLocation}{Munich}
 \newtheoremstyle{colon}%
@@ -45,6 +45,25 @@
 \makeatletter
 \newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
 \makeatother
+
+\newcommand{\datatable}[1]{
+	\pgfplotstabletypeset[
+    col sep=comma,
+    string type,
+    every head row/.style={%
+        after row=\hline
+    },  
+    every row no 4/.style={before row=\hline},
+    every row no 8/.style={before row=\hline},
+    every row no 12/.style={before row=\hline},
+    columns/Property/.style={column type/.add={|}{}},
+    columns/Interpretations/.style={column type/.add={|}{}},
+    columns/Algorithms/.style={column type/.add={|}{}},
+    columns/Result/.style={column type/.add={|}{}},
+    columns/Time/.style={column type/.add={|}{|}},
+]{#1}
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Theorem
@@ -118,7 +137,7 @@ frametitleaboveskip=\dimexpr-\ht\strutbox\relax
 \mainmatter{}
 
 \input{chapters/01_introduction}
-\input{chapters/02_literature_review.tex}
+% \input{chapters/02_literature_review.tex}
 \input{chapters/02_preliminaries.tex}
 \input{chapters/03_inductive_statement.tex}
 \input{chapters/04_learning_algorithms.tex}
@@ -127,10 +146,12 @@ frametitleaboveskip=\dimexpr-\ht\strutbox\relax
 \input{chapters/07_conclusion}
 
 \appendix{}
+\include{data/experiment_results}
+\input{chapters/A_table_data.tex}
 
 \microtypesetup{protrusion=false}
 
-\addchap{Abbreviations}
+% \addchap{Abbreviations}
 \begin{acronym}
 	\itemsep-.25\baselineskip
 	\acro{TUM}[TUM]{Technical University of Munich}

@@ -1,0 +1,13 @@
+ Name,Property,Interpretations,Algorithms,Result,Time,Language Size
+ Berkeley,deadlock,Trap,Lstar,v,0.219ms,1
+ ,,,NLstar,v,0.094ms,1
+ ,,,KV,v,0.09ms,1
+ ,,,RS,v,0.079ms,1
+ ,,Siphon,Lstar,v,0.105ms,1
+ ,,,NLstar,v,0.089ms,1
+ ,,,KV,v,0.08ms,1
+ ,,,RS,v,0.078ms,1
+ ,,Flow,Lstar,v,0.118ms,1
+ ,,,NLstar,v,0.083ms,1
+ ,,,KV,v,0.08ms,1
+ ,,,RS,v,0.078ms,1

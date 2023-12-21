@@ -2,8 +2,6 @@
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
 \chapter{Introduction}\label{chapter:introduction}
-% Introduce software systems and testing problems.
-% Then connect to model checking
 As software systems grow in size and permeate more and more areas of our lives.
 Individuals and organizations use the majority of software in their systems. Thus the 
 reliability and stability of the software testing are of major importance. Simulation 
@@ -11,9 +9,8 @@ and testing can detect bugs but not prove their absence. In such reactive
 systems, when no function is being computed, termination is usually undesirable. For 
 this reason, we are interested in \textit{property checking} or \textit{model checking}. 
 It has been widely used in various real-world applications, ranging from adaptive 
-model checking to solving real-world problems. (\cite*{faster}, \cite*{survey})
+model checking to solving real-world problems (\cite{faster}, \cite{survey}).
 \paragraph*{}
-% Introduce model checking, then regular model checking, then inductive statements
 We here consider the verification of safety properties similar to the original 
 Regular Model Checking framework, where a program is represented using symbols 
 and finite automata.
@@ -23,14 +20,13 @@ of dedicated bad configurations.
 In other words, these bad configurations should be not reached during the program's execution. 
 However, this is an undecidable question in general and tools for Regular Model Checking 
 still need to be completed.
-A solution to this problem was proposed in \cite*{clarke2009model}, which utilizes 
+A solution to this problem was proposed in \cite*{Welzel2023InductiveSts}, which utilizes 
 $\textit{inductive statements}$ to ensure that no undesired configuration can be reached 
 from any initial configuration. This means that for every pair of initial 
 and undesired configurations, there is at least one inductive statement that 
 is satisfied by the initial configuration but not by the undesired one. 
 By doing this, it can be concluded that no undesired configuration can be reached.
 \paragraph*{}
-% Introduce learning for inductive statements
 Over the past decade, there has been a significant increase in the study of automata learning.
 This field has produced numerous successful applications, such as pattern and natural language recognition, 
 computational biology, data mining, robotics, automatic verification, and even the analysis of music.

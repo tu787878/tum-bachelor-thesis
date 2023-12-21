@@ -1,3 +1,32 @@
 \chapter{\abstractname}
 
+Regular Model Checking, as proposed in the works of \cite*{bouajjani2000regular}, is a 
+widely used paradigm for verifying parameterized and infinite-state systems that 
+occur naturally when a program uses queries, stacks or intergers, etc.
+
+
+
 %TODO: Abstract
+This thesis aims to investigate automata learning,
+which includes techniques that extract finite automata 
+from external data sources in the domains of verification and synthesis.
+We are considering an application scenario that is particularly well-suited for Regular Model Checking, 
+where the \textit{regular transition system} models the parameterized systems.
+
+Firtsly, we present an approach for regular model checking that uses inductive statements to over-approximate all reachable states.
+A statement is inductive if it only relates a state satisfying $\phi$ with states that also satisfy $\phi$.
+We demonstrate how the statements are encoded and their \textit{interpretations} defined, 
+which helps in understanding the encoded statements.
+
+We will discuss the primary mechanism of learning automata, which involves the use of 
+membership queries and equivalent queries. 
+During the learning process, the Teacher and the Learner interact with each other. 
+The Teacher has knowledge of the target language, 
+while the Learner has the opportunity to ask two types of queries: membership and equivalence queries.
+Additionally, we will cover four active learning algorithms: $L^*$, $NL^*$, Kearns-Vazirani, Rivest-Schapire.
+
+We evaluated the performance of our tool, dodo-cpp, on a set of common examples for parameterized verification, 
+and compared the results of these algorithms.
+The main findings of this thesis show that: (1.) $\dots$, (2.) $\dots$, (3.) $\dots$ (NEED MORE INFO FROM EXPERIMENT)
+
+

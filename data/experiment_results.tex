@@ -1,0 +1,65 @@
+
+% Berkeley
+\begin{filecontents*}{Berkeley_exclusiveexclusive.csv}
+	Name,Property,Interpretations,Algorithms,Result,Time,Language Size
+	Berkeley,exclusiveexclusive,Trap,Lstar,x,2.472ms,-
+	,,,NLstar,x,2.547ms,-
+	,,,KV,x,2.77ms,-
+	,,,RS,x,2.254ms,-
+	,,Siphon,Lstar,x,1.829ms,-
+	,,,NLstar,x,1.978ms,-
+	,,,KV,x,1.67ms,-
+	,,,RS,x,1.688ms,-
+	,,Flow,Lstar,x,5.556ms,-
+	,,,NLstar,x,5.435ms,-
+	,,,KV,x,5.484ms,-
+	,,,RS,x,5.428ms,-
+\end{filecontents*}
+
+\begin{filecontents*}{Berkeley_exclusiveunowned.csv}
+	Name,Property,Interpretations,Algorithms,Result,Time,Language Size
+	Berkeley,exclusiveunowned,Trap,Lstar,v,27.835ms,6
+	,,,NLstar,v,25.548ms,6
+	,,,KV,v,25.213ms,6
+	,,,RS,v,25.961ms,6
+	,,Siphon,Lstar,x,1.19ms,-
+	,,,NLstar,x,1.121ms,-
+	,,,KV,x,1.091ms,-
+	,,,RS,x,1.091ms,-
+	,,Flow,Lstar,x,5.627ms,-
+	,,,NLstar,x,5.916ms,-
+	,,,KV,x,5.636ms,-
+	,,,RS,x,5.861ms,-
+\end{filecontents*}
+
+\begin{filecontents*}{Berkeley_exclusivenonexclusive.csv}
+	Name,Property,Interpretations,Algorithms,Result,Time,Language Size
+	Berkeley,exclusivenonexclusive,Trap,Lstar,v,33.441ms,6
+	,,,NLstar,v,31.765ms,6
+	,,,KV,v,30.473ms,6
+	,,,RS,v,30.338ms,6
+	,,Siphon,Lstar,x,1.953ms,-
+	,,,NLstar,x,1.74ms,-
+	,,,KV,x,1.682ms,-
+	,,,RS,x,1.664ms,-
+	,,Flow,Lstar,x,5.616ms,-
+	,,,NLstar,x,5.48ms,-
+	,,,KV,x,5.422ms,-
+	,,,RS,x,5.85ms,-
+\end{filecontents*}
+
+\begin{filecontents*}{Berkeley_deadlock.csv}
+	Name,Property,Interpretations,Algorithms,Result,Time,Language Size
+	Berkeley,deadlock,Trap,Lstar,v,0.219ms,1
+	,,,NLstar,v,0.094ms,1
+	,,,KV,v,0.09ms,1
+	,,,RS,v,0.079ms,1
+	,,Siphon,Lstar,v,0.105ms,1
+	,,,NLstar,v,0.089ms,1
+	,,,KV,v,0.08ms,1
+	,,,RS,v,0.078ms,1
+	,,Flow,Lstar,v,0.118ms,1
+	,,,NLstar,v,0.083ms,1
+	,,,KV,v,0.08ms,1
+	,,,RS,v,0.078ms,1
+\end{filecontents*}
