@@ -11,7 +11,8 @@ where $u$ satisfies $I$, $u$ also satisfies the statement.
 Oone can implement the Membership Oracle by checking the acceptance 
 of $\mathcal{M}$, where $\mathcal{M}$ is an automaton for 
 $\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$ and negating the answer (Algorithm \ref{alg:membership}).
-The $\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$ is defined by:
+
+Because regular languages are closed under it's complementation \cite{holzer2015closure}, we define $\overline{Inductive_{\mathcal{V}}(\mathcal{R})}$:
 
 \begin{equation}\label{eq:non_inductive}
 \overline{Inductive_{\mathcal{V}}(\mathcal{R})} = \lbrace I \in \Gamma^* \, | \, \exists u
@@ -28,12 +29,8 @@ E \times F \times (Q \setminus F) \rangle$ where
     \triangle(\langle q_1, p, q_2 \rangle, I) =  \exists \langle \sigma_1, \sigma_2 \rangle \in \Sigma \times \Sigma. \,\,\,
     (\delta(q_1, \langle \sigma_1, I \rangle) ,\, \Delta(p, \langle \sigma_1, \sigma_2 \rangle) ,\, \delta(q_2, \langle \sigma_2, I \rangle))
 \end{equation*}
-The states that are accepted by this automaton when each its parts are satified: 
-\begin{align*} 
-    \delta(q_1, \langle \sigma_1, I \rangle) \in  F \\
-    \Delta(p, \langle \sigma_1, \sigma_2 \rangle) \in E \\
-    \delta(q_2, \langle \sigma_2, I \rangle) \notin  F
-\end{align*}
+We call a state $\langle q, p, q' \rangle$ is final if $q \in  F \wedge p \in E \wedge q' \notin  F$.
+
 For every pair of initial word and its reached word through the transducer.
 Where the initial word is satified by the statement I, the reached word is not.
 From \ref{eq:non_inductive} it can guarantee that all statements, that are acepted by this automaton, are non-inductive.
@@ -143,10 +140,7 @@ a variable.
 In other words, a pair $\langle \sigma, i \rangle$ is a literal which assigns to a variable.
 The variables have two value: \textit{true} and \textit{false}.
 Therefore, $\sigma$ is a part of $I_i$ if and only if the  model value of the literal $\langle \sigma, i \rangle$ is true.
-Firstly, we introduce the helper function
-\begin{equation*}
-    ExactlyOne(V) = \bigvee_{v \in V} v \wedge \bigwedge_{v,v'\in V: v \neq v'} \lnot (v \wedge v')
-\end{equation*}
+
 Intuitively, it generates a set of clauses that ensure that exactly one of the 
 literals evaluate to \textit{true}.
 Recall that a statement is not inductive if there exists one transition

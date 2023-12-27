@@ -1,12 +1,12 @@
 \chapter{Preliminaries}\label{chapter:preliminaries}
 % basic
-In this chapter, we introduce some basic notions and definitioms that we use throughout this thesis.
+In this chapter, we introduce some basic notions and definitions that we use throughout this thesis.
 
 \section*{Words and Languages}
 An \textit{alphabet} $\Sigma$ is a finite set of symbols.
 A \textit{word} $u = a_1 \dots a_n$ is a finite sequence of symbols $a_i \in \Sigma$ for $i \in \lbrace 1, \dots, n\rbrace$. 
-$\Sigma^*$ denotes the set of all words over an alphaber $\Sigma$.
-\textit{Regular languages} are those which can be identified by a finite state automaton \cite*{enwiki:1190424473}.
+$\Sigma^*$ denotes the set of all words over an alphabet $\Sigma$.
+\textit{Regular languages} are those which can be identified by a finite state automaton.
 
 \section*{Finite automata}
 We classify automata into two categories: deterministic and non-deterministic, 
@@ -14,40 +14,64 @@ in order to identify regular languages consisting of finite words.
 \begin{theo}[Deterministic finite automaton (DFA)]{definition:dfa}
     \textit{
     A DFA is a quintuple $\mathcal{M} = (Q, q_0, \Sigma, \delta, F)$ where $Q$ is a finite set of states with 
-    a initial state $q_0 \in Q$. A set of input symbols called the alphabet $\Sigma$.
-    A transition $\delta: Q \times \Sigma \rightarrow  Q$ and a set of final states $F$.
-    Let $w=a_1a_2...a_n$ be a string over the alphabet $\Sigma$. The automaton $\mathcal{M}$ 
-    accepts $w$ if a sequence of states, $r_0, r_1,...r_n$ exist in $Q$:
+    a initial state $q_0 \in Q$. $\Sigma$ is set of alphabet of the automaton.
+    We define the transition $\delta: Q \times \Sigma \rightarrow  Q$ and $F$ is a set of final states.
+    Let $w=a_1a_2\dots a_n$ be a string over the alphabet $\Sigma$. The automaton $\mathcal{M}$ 
+    accepts $w$ if a sequence of states, $r_0, r_1,\dots,r_n$ exist in $Q$:
     \begin{itemize}
         \item $r_0=q_0$
-        \item $r_{i+1} = \delta(r_i, a_{i+1}),$ for $i = 0,...,n-1$
+        \item $r_{i+1} = \delta(r_i, a_{i+1}),$ \, for $i = 0,\dots,n-1$
         \item $r_n \in F$
     \end{itemize}
     }
 \end{theo}
+\newpage
 
 \begin{theo}[Nondeterministic finite automaton (NFA)]{definition:nfa}
     \textit{
-        A NFA is a quintuple $\mathcal{N} = (Q, q_0, \Sigma, \Delta, F)$ where $Q$, $\Sigma$ and $F$ 
-        are as for a DFA.
-        Let $w=a_1a_2...a_n$ be a string over the alphabet $\Sigma$. The automaton $\mathcal{N}$ 
-        accepts $w$ if a sequence of states, $r_0, r_1,...r_n$ exist in $Q$:
+        A NFA is a quintuple $\mathcal{N} = (Q, q_0, \Sigma, \Delta, F)$ where $Q$, $q_0$, $\Sigma$ and $F$ 
+        are defined similarly to Definition \ref{definition:dfa}.
+        Let $w=a_1a_2\dots a_n$ be a string over the alphabet $\Sigma$. The automaton $\mathcal{N}$ 
+        accepts $w$ if a sequence of states, $r_0, r_1\dots,r_n$ exist in $Q$:
         \begin{itemize}
             \item $r_0=q_0$
-            \item $r_{i+1} \in \Delta(r_i, a_{i+1}),$ for $i = 0,...,n-1$
+            \item $r_{i+1} \in \Delta(r_i, a_{i+1}),$ \, for $i = 0,\dots,n-1$
             \item $r_n \in F$
         \end{itemize}
         }
 \end{theo}
 
-\section*{Token passing algorithm}\label{example:token-passing}
-We will provide a simple example to demonstrate how systems are 
-modelled in \textit{regular transition system}.
-The \textit{token passing} system comprises a linear array of agents where the 
-agent holds a token, and in each step, the current agent can pass 
-the token to its right neighbour. We choose to represent the agent that holds 
-the token as the letter t and the agents that do not hold the token
-as the letter n.
+Here are two examples of presenting regular languages using DFA and NFA.
+$\mathcal{L} = ab*$ is a regular language that consists of all words over the alphabet $\Sigma = \{a,b\}$, 
+which begin with one "a" and are followed by either any number of "b" or nothing at all.
+
+\begin{lem}[DFA for language $\mathcal{L} = ab*$]{lem:dfa}
+    \textit{Automaton over the alphabet $\Sigma = \{a,b\}$}.\\
+    \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+        \node[state,initial] (q_0)   {$q_0$}; 
+        \node[state,accepting] (q_1) [right=of q_0] {$q_1$}; 
+        \node[state] (q_2) [below=of q_1] {$q_2$}; 
+         \path[->] 
+         (q_0) edge  node {a} (q_1)
+         (q_0) edge  node {b} (q_2)
+         (q_1) edge [loop above] node {b} ()
+         (q_1) edge  node {a} (q_2)
+         (q_2) edge [loop below] node {a,b} ();
+     \end{tikzpicture}
+\end{lem}
+
+\newpage
+\begin{lem}[NFA for language $\mathcal{L} = ab*$]{lem:nfa}
+    \textit{Automaton over the alphabet $\Sigma = \{a,b\}$}.\\
+    \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+        \node[state,initial] (q_0)   {$q_0$}; 
+        \node[state,accepting] (q_1) [right=of q_0] {$q_1$}; 
+         \path[->] 
+         (q_0) edge  node {a} (q_1)
+         (q_1) edge [loop above] node {b} ();
+     \end{tikzpicture}
+\end{lem}
+
 
 % Let us examine how this algorithm is applied in a real-world scenario. 
 % Imagine a conveyor belt buffet restaurant where a big plate of thinly sliced beef 

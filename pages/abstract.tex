@@ -1,24 +1,18 @@
 \chapter{\abstractname}
 
-Regular Model Checking, as proposed in the works of \cite*{bouajjani2000regular}, is a 
+Regular Model Checking is a 
 widely used paradigm for verifying parameterized and infinite-state systems that 
-occur naturally when a program uses queries, stacks or intergers, etc.
+occur naturally when a program uses queries, stacks or intergers, and so on.
+One of the major challenges in verifying parameterized and infinite-state systems is 
+determining the set of states that can be reached from a set of initial states,
+which is an undecidable problem and necessary incomplete.
 
-
-
-%TODO: Abstract
-This thesis aims to investigate automata learning,
-which includes techniques that extract finite automata 
-from external data sources in the domains of verification and synthesis.
-We are considering an application scenario that is particularly well-suited for Regular Model Checking, 
-where the \textit{regular transition system} models the parameterized systems.
-
-Firtsly, we present an approach for regular model checking that uses inductive statements to over-approximate all reachable states.
-A statement is inductive if it only relates a state satisfying $\phi$ with states that also satisfy $\phi$.
+To address this issue, we propose a semi-decision procedure for regular model checking that uses inductive statements to over-approximate all reachable states.
+A statement is considered inductive if it only relates a state satisfying $\phi$ with states that also satisfy $\phi$.
 We demonstrate how the statements are encoded and their \textit{interpretations} defined, 
-which helps in understanding the encoded statements.
+which is crucial for understanding the encoded statements.
 
-We will discuss the primary mechanism of learning automata, which involves the use of 
+We discuss the primary mechanism of learning automata, which involves the use of 
 membership queries and equivalent queries. 
 During the learning process, the Teacher and the Learner interact with each other. 
 The Teacher has knowledge of the target language, 

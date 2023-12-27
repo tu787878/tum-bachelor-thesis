@@ -2,58 +2,69 @@
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
 \chapter{Introduction}\label{chapter:introduction}
-As software systems grow in size and permeate more and more areas of our lives.
-Individuals and organizations use the majority of software in their systems. Thus the 
-reliability and stability of the software testing are of major importance. Simulation 
-and testing can detect bugs but not prove their absence. In such reactive 
-systems, when no function is being computed, termination is usually undesirable. For 
-this reason, we are interested in \textit{property checking} or \textit{model checking}. 
+Computer systems grow in size and permeate more and more areas of our lives, such as PCs, mobile phone,
+ATMs, car's control systems, an so on.
+However, as systems become more complex, they become more difficult to protect against mistakes or attacks.
+Additionally, bugs have the potential to cause significant economic damage, and in some cases, even pose a threat to human lives, such as Pentium-Bug \cite*{KniesPentiumBug}, Toyota's unintended acceleration \cite*{koopman2014case}, etc.
+Thus the reliability and stability of the software verification are of major importance. 
+Although simulation and testing can detect bugs, it cannot guarantee their absence.
+Furthermore, in reactive systems like operating systems, servers, and ATMs, when no function is being computed, termination is usually undesirable. 
+For this reason, we are interested in \textit{property checking} or \textit{model checking}. 
+
+\paragraph*{}
+Model Checking can take on various forms, and one of these is Regular Model Checking (RMC) \cite*{bouajjani2000regular},
+where finite automata are used to represent the program that is being verified.
 It has been widely used in various real-world applications, ranging from adaptive 
 model checking to solving real-world problems (\cite{faster}, \cite{survey}).
-\paragraph*{}
-We here consider the verification of safety properties similar to the original 
-Regular Model Checking framework, where a program is represented using symbols 
-and finite automata.
+% In RMC, sets of words represent system states and regular relations between words represent transitions of the system.
+RMC is a technique commonly employed to ensure the safety of a system by verifying safety properties.
 To be more specific, our goal is to confirm that a given program cannot execute 
 in a way that starts from a set of initial configurations and leads to a set 
-of dedicated bad configurations. 
+of bad configurations. 
 In other words, these bad configurations should be not reached during the program's execution. 
 However, this is an undecidable question in general and tools for Regular Model Checking 
-still need to be completed.
-A solution to this problem was proposed in \cite*{Welzel2023InductiveSts}, which utilizes 
+are necessarily incomplete.
+A semi-decision procedure was proposed in \cite*{Welzel2023InductiveSts} that utilizes 
 $\textit{inductive statements}$ to ensure that no undesired configuration can be reached 
-from any initial configuration. This means that for every pair of initial 
-and undesired configurations, there is at least one inductive statement that 
-is satisfied by the initial configuration but not by the undesired one. 
-By doing this, it can be concluded that no undesired configuration can be reached.
+from any initial configuration. 
+This means there is at least one inductive statement that is satisfied by the initial configuration but not the undesired one.
+
 \paragraph*{}
 Over the past decade, there has been a significant increase in the study of automata learning.
-This field has produced numerous successful applications, such as pattern and natural language recognition, 
-computational biology, data mining, robotics, automatic verification, and even the analysis of music.
-One can use autoamta learning to acquire a set of inductive statements that 
-are powerful enough to establish a given safety property. The language of these
-inductive statements serves as proof of the property's correctness.
-The purpose of this thesis is to collect and analyze empirical data on 
-the performance of learning algorithms such as L*, NL*, Kearns-Vazirani, Rivest-Schapire.
+This field has produced numerous successful applications, such as 
+computational biology, data mining, robotics, automatic verification, and even the analysis of music. 
+For an extensive survey, please refer to \cite*{de2005bibliographical}.
+This thesis is inspired by successful automata learning techniques and aims to expand its application to verify safety properties for RMC. 
+One type of automata learning is active learning, in which the learner attempts to acquire a regular language from a teacher 
+who has complete knowledge of the target language.
+The learner interacts with the teacher via two type of queries: membership queries and equivalence queries.
+The first question pertains to whether a word is part of the target language, 
+while the second question is whether a hypothesized automaton can recognize the target language.
+Once we know how to implement the Teacher to answer the oracles, 
+applying different learning algorithms to obtain a set of inductive statements that are capable of establishing a given safety property is now simple.
+% These inductive statements' language serves as proof of the property's correctness.
+\paragraph*{}
+The purpose of this thesis is to employ various algorithms such as $L^*$, $NL^*$, Kearns-Vazirani, Rivest-Schapire
+to learn the set of inductive statements of a system. 
+Additionally, we gather and analyze empirical data on the performance of these learning algorithms.
 
 
 \paragraph*{Structure of the thesis}
 \paragraph*{}
 
-In this thesis, we begin with \autoref{chapter:preliminaries} by fixing notations and 
-definitions used throughout the thesis.
+The structure of this thesis is as follows.
+In \autoref{chapter:preliminaries} of this thesis, we will establish the notations and definitions that will be used throughout the rest of the paper.
 In \autoref{chapter:inductive_statement}, we will thoroughly explain the
-\textit{Regular transition system} and \textit{Inductive statements} as an approach 
-for checking the safety properties of \textit{model checking}. 
+\textit{regular transition system} and \textit{inductive statements} as an approach 
+for checking the safety properties of \textit{RMC}. 
 Subsequently, \autoref{chapter:learning_algorithm} gives a general introduction
-to active learning algorithm and their oracles.
+to active learning algorithms and their oracles.
 Furthermore, we will introduce some active learning algorithms that used 
 for our experiments.
-\autoref{chapter:implementation} will investigate the C++-implemented programm to
+\autoref{chapter:implementation} will investigate the C++-implemented program to
 learn a set of inductive statements from systems called \textit{dodo}. 
-The programm uses not only the \textit{Angluin's algorithm $L^*$}, but also 
-the \textit{$NL^*$}, \textit{Kearns-Vaziran} and \textit{Rivest-Schapi}.
-After learning process, it visualizes the graphs that can evaluate 
-the \textit{efficiency} and \textit{effectiveness} of these algorithms.
-Finally, we will summarize and assess our experment results in \autoref{chapter:experiment} 
+% The program uses not only the \textit{Angluin's algorithm $L^*$}, but also 
+% the \textit{$NL^*$}, \textit{Kearns-Vaziran} and \textit{Rivest-Schapi}.
+% After learning process, it visualizes the graphs that can evaluate the \textit{efficiency} and \textit{effectiveness} of these algorithms.
+Finally, we will summarize and assess our experiment results in \autoref{chapter:experiment} 
 and conclude the thesis with \autoref{chapter:conclusion}.
